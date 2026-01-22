@@ -1,0 +1,730 @@
+Arrays:->
+===========================================
+question 1(Sort an array of 0's 1's and 2's):
+==============================================================
+Brute Force Approach:->Sorting ( even if it is not the expected solution here but it can be considered as one of the approaches). Since the array contains only 3 integers, 0, 1, and 2. Simply sorting the array would arrange the elements in increasing order.like merge sort.
+Time Complexity: O(N*logN) if merge sort
+
+Space Complexity: O(1)
+
+Better approach: isme toh bhai kuch nhi 3 count variable lelo aur count karlo 0 ka 1 ka aur 2 ka (ye kaam ek traversal mein hojayega), uske baad loop chalao 3 : aur laga do usi jagah pe 
+
+Time Complexity: O(N) + O(N), where N = size of the array. First O(N) for counting the number of 0’s, 1’s, 2’s, and second O(N) for placing them correctly in the original array.
+
+Space Complexity: O(1) as we are not using any extra space.
+
+Optimal Approach: isme use hoga algorithm: Dutch National flag algorithm. aur isme 3 pointer ka use karte hai low,mid aur high aur bas mid ka use karte hai check karne ke liye :
+
+First, we will run a loop that will continue until mid <= high.
+There can be three different values of mid pointer i.e. arr[mid]
+If arr[mid] == 0, we will swap arr[low] and arr[mid] and will increment both low and mid. Now the subarray from index 0 to (low-1) only contains 0.
+If arr[mid] == 1, we will just increment the mid pointer and then the index (mid-1) will point to 1 as it should according to the rules.
+If arr[mid] == 2, we will swap arr[mid] and arr[high] and will decrement high. Now the subarray from index high+1 to (n-1) only contains 2.
+In this step, we will do nothing to the mid-pointer as even after swapping, the subarray from mid to high(after decrementing high) might be unsorted. So, we will check the value of mid again in the next iteration.
+Finally, our array should be sorted.
+
+isme main woh diagram yaad rakhna hai jo striver bhaiya bataye the : aur mid se high(depth mein diagram dekh lo) tak unsorted rahega main isme ye dhyan rakhna hai ki kyu pointer yaha ghata rahe hai badha nhi rahe hai, jaise sirf high-- , kyuki waha pe chance rehta hai ki unsorted ho mid pe isliye usko increment nhi karte hai , usko dobara check karte hai
+
+Time Complexity: O(N), where N = size of the given array.
+Reason: We are using a single loop that can run at most N times.
+
+Space Complexity: O(1) as we are not using any extra space.
+
+question 2(Find the Majority Element that occurs more than N/2 times)
+==============================================================
+Brute Force Approach: kuch nhi 2 loop use karo i aur j ek i pe rakho aur ek j , usi i se shuru karo kyuki usko bhi ginna hai
+aur bas count karke direct check karlo ki n/2 se greater hai ki nhi bas lekin leetcode pe pass nhi hoga, 52 testcase pe jake atak jayega 
+reason:
+==========
+Time Complexity: O(N2), where N = size of the given array. Reason: For every element of the array the inner loop runs for N times. And there are N elements in the array. So, the total time complexity is O(N2). Space Complexity: O(1) as we use no extra space.
+
+leetcode solution : class Solution {
+    public int majorityElement(int[] nums) {
+       double required= Math.floor(nums.length/2); 
+       int majority = 0 ;
+       for(int i=0;i<nums.length;i++)
+       {
+        int count=0;
+        for(int j=i;j<nums.length;j++)
+        {
+            if(nums[i]==nums[j]){
+                count++;
+                if(count > required )
+                {
+                    majority = nums[i];
+                }
+            }
+        }
+       }
+       return majority;
+    } 
+}
+
+Better Approch: use hashmap
+
+
+Optimal Approach:Moore’s Voting Algorithm: isko is tarike se yaad rakhna hai ki count variable humara vote hai wahi neta jitega vote sabse jada hoga last mein aur intuition iska:
+Initialize 2 variables:
+Count –  for tracking the count of element
+Element – for which element we are counting
+Traverse through the given array.
+If Count is 0 then store the current element of the array as Element.
+If the current element and Element are the same increase the Count by 1.
+If they are different decrease the Count by 1.
+The integer present in Element should be the result we are expecting 
+leetcode code:class Solution {
+    public int majorityElement(int[] nums) {
+       int count=0, element=-1;
+       for(int i=0;i<nums.length;i++)
+       {
+        if(count==0){
+            element=nums[i];
+            count++;
+        }
+        else if(nums[i]==element){
+            count++;
+        }
+        else{
+            count--;
+        }
+       }
+       return element;
+    } 
+}
+
+Time Complexity: O(N) + O(N), where N = size of the given array.
+Reason: The first O(N) is to calculate the count and find the expected majority element. The second one is to check if the expected element is the majority one or not.
+
+Note: If the question states that the array must contain a majority element, in that case, we do not need the second check. Then the time complexity will boil down to O(N).
+
+Space Complexity: O(1) as we are not using any extra space.
+
+Question:3=>Majority Elements(&gt;N/3 times) | Find the elements that appears more than N/3 times in the array
+============================================================================================================
+
+My brute force:class Solution {
+    public List<Integer> majorityElement(int[] nums) {
+        int required=nums.length/3;
+        HashSet<Integer> set = new HashSet<>();
+        for(int i=0;i<nums.length;i++){
+            int count=0;
+            for(int j=0;j<nums.length;j++)
+            {
+                if(nums[i]==nums[j]){
+                    count++;
+                    if(count>required){
+                        set.add(nums[i]);
+                    }
+                }
+            }
+        }
+        ArrayList<Integer> ans = new ArrayList<>(set);
+        return ans;  //gave tle  
+    }
+}
+ 
+but my brute force was not that much good like stiver: yaha mai 2 collection framwework laga diya lekin striver ka logic tha 
+
+Optimal Approach : 
+
+
+
+
+
+
+(4)Find the missing number in an array:
+
+my brute force -> 
+
+class Solution {
+    public int missingNumber(int[] nums) {
+        Arrays.sort(nums);
+        int n=nums.length,ans=0;
+        int m=n+1;
+        int[] arr=new int[m];
+        for(int i=0;i<m;i++)
+        {
+            arr[i]=i;
+        }
+        for(int i=0;i<m;i++)
+        {
+            int j=i;
+            if(nums[j]!=arr[i]){
+                ans=arr[i];
+                break;
+            }
+            else if(j==n-1) {   
+                ans=n;
+                break;
+            }
+        }
+        return ans;
+    }
+}
+
+striver brute force:
+
+class Solution{
+     public int missingNumber(int[] nums) {
+        for(int i=0;i<=n;i++)
+        {
+            int flag=0;
+            for(int j=0;j<n;j++)
+            {
+                if(nums[j]==i)
+                {
+                    flag=1;
+                    break;
+                }
+            }
+        }
+        if(flag==0)
+        {
+            return i;
+        }
+     }
+}
+
+T.C. -> O(N2)
+S.C. -> O(1)
+
+better approach -> take hash array(iska 1 size jada hoga normal input arrayse) , pehle sabko 0 se set kardo uske baad  traverse karke jo jo elements hai sabki value 1 set kardo aur agar koi aisi value hai jo abhi bhi 0 hai toh wahi answer hai
+
+T.C. -> O(N)+O(N) = O(2n)
+S.C. -> O(N)
+
+now optimize for space complexity
+
+optimal approach1-> we will be using formula summation of n natural numbers 
+
+code:->
+class Solution {
+    public int missingNumber(int[] nums) {
+        int n=nums.length;
+        int sum1=0;
+        int sum=n*(n+1)/2;
+        for(int i=0;i<n;i++)
+        {
+            sum1=sum1+nums[i];
+        }
+        int ans=sum-sum1;
+        return ans;
+    }
+}
+
+T.C. -> O(N)
+S.C. -> O(1)
+
+optimal approach 2-> using XOR (slightly better than optimal approach1) because if 10 raise to power 5 is input tab summation nikalne mein integer ke capacity ke upar chala jayega -> overflow
+XOR comcept - 1^1 =0 same number with XOR =0 
+pehle 2 loop mein likhte hai dono ka alag alag xor, nums array ke liye alag aur size tak 1 to n ke liye alag lekin un dono ko ek hi mein kar denge
+
+code:class Solution{
+     public int missingNumber(int[] nums) {
+        int xor1=0,xor2=0;
+        int n=nums.length;
+        for(int i=0;i<n;i++)
+        {
+            xor2^=nums[i];
+            xor1^=(i+1);
+        }
+        return xor1^xor2;
+    }
+}
+
+
+(5) Max Consecutive Ones
+this is my brute force and this is the only one solution given by tsriver also
+
+code-> class Solution {
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int count=0,maxi=0;
+        for(int i=0;i<nums.length;i++)
+        {
+            if(nums[i]==1)
+            {
+                count+=1;
+                maxi=Math.max(count,maxi);
+            } 
+            else{
+                count=0;
+            }
+        }
+        return maxi;
+    }
+}
+
+T.C.->O(N)
+S.C.->O(1)
+
+
+(6)  Single Number
+
+brute force: I was not able to think this solution, we will use 2 loops here we will pickup one element and we will find the count of that element , if count is 1 then that is the single number which is  unique
+
+Code: 
+      int cnt=0;
+      for(i=0 -> n)
+      {
+        num=arr[i];
+        for(j=0 -> n)
+        {
+            if(arr[j]==num)
+            {
+                cnt+=1;
+            }
+        }
+        if(cnt==1) { return num; }
+      }
+
+T.C. -> O(N2)
+S.C. -> O(1)
+
+
+better approach: using hashmap pehle iterate karke map mein fill kar denge elements ke count uske baad map se bahar nikal ke jo bhi sirf 1 baar aaya hai usko return kar denge
+
+code:
+class Solution {
+    public int singleNumber(int[] nums) {
+        HashMap<Integer,Integer> map=new HashMap<>();
+        int ans=0;
+        for(int i=0;i<nums.length;i++)
+        {
+            map.put(nums[i], map.getOrDefault(nums[i],0)+1);   -> N log M , here n is length of array and m is size of map
+        }
+        for(int key: map.keySet())
+        {
+            if(map.get(key)==1){
+                ans=key;              -> O(N/2+1) KYUKI most of the numbers appear twice and 1 guy will be unique 
+            }
+        }
+        return ans;
+    }
+}
+
+T.C. -> N log M (WHERE M IS O(N/2+1)) + iteration on hashmap(O(N/2+1))
+S.C. -> O(N/2+1)
+
+Optimal: every number appears twice and only one number is unique , so use XOR -> for same elements XOR A^A =0 , So tab saare jitne twice aa rahe hai unka XOR karne ke baad 0 milega aur ek unique hoga uske saath 0 ka xor karne ke baad wahi single number mil jayega
+
+
+code: class Solution {
+    public int singleNumber(int[] nums) {
+        int xor=nums[0];
+        for(int i=1;i<nums.length;i++)
+        {
+            xor^=nums[i];
+        }
+        return xor;
+    }
+}
+
+T.C. -> O(N)
+S.C. -> O(1)
+
+(7) Longest subarray with sum K (positives)
+ brute force : my brute force was , 2 loop se lekin striver ne pehle 3 loop se kiya hai uske baad isi ko optimize karke 2 loop se kiya hai
+
+code:public class practice{
+    static int method(int[] arr,int k)
+    {
+        int i=0,j=0,sum=0,maxlen=0;
+        while(j<arr.length)
+        {
+            sum+=arr[j];
+            while(sum>k){
+                sum-=arr[i];
+                i++;
+            }
+            if(sum==k)
+            {
+                maxlen=Math.max(maxlen,j-i+1);
+            }
+            j++;
+        }
+        return maxlen;
+    }
+    public static void main(String[] args) {
+        int[] arr={ 1,2,3,1,1,1,1,4,2,3 };
+        int k=3;
+        int ans=method(arr,k);
+        System.out.println(ans);
+    }
+}
+
+Time Complexity: O(N3) approx., where N = size of the array.
+Reason: We are using three nested loops, each running approximately N times.
+
+Space Complexity: O(1) as we are not using any extra space.
+
+optimized brute force:
+my code:public class practice{
+//    static int method(int[] arr,int k)
+//    {
+//        int maxlen=0;
+//        for(int i=0;i<arr.length;i++)
+//        {
+//            int sum=0;
+//            for(int j=i;j<arr.length;j++)
+//            {
+//                sum+=arr[j];
+//                if(sum==k){
+//                    maxlen=Math.max(maxlen,j-i+1);
+//                }
+//                else if(sum>k){
+//                    break;
+//                }
+//            }
+//        }
+//        return maxlen;
+//    }
+//    public static void main(String[] args) {
+//        int[] arr={ 1,2,3,2,2,2,6,5,1 };
+//        int k=6;
+//        int ans=method(arr,k);
+//        System.out.println(ans);
+//    }
+//}
+
+but striver's code:
+
+import java.util.*;
+public class tUf {
+    public static int getLongestSubarray(int []a, long k) {
+        int n = a.length; // size of the array.
+
+        int len = 0;
+        for (int i = 0; i < n; i++) { // starting index
+            long s = 0; // Sum variable
+            for (int j = i; j < n; j++) { // ending index
+                // add the current element to
+                // the subarray a[i...j-1]:
+                s += a[j];
+
+                if (s == k)
+                    len = Math.max(len, j - i + 1);
+            }
+        }
+        return len;
+    }
+
+    public static void main(String[] args) {
+        int[] a = {2, 3, 5, 1, 9};
+        long k = 10;
+        int len = getLongestSubarray(a, k);
+        System.out.println("The length of the longest subarray is: " + len);
+    }
+}
+
+better : using hashmap , concept of prefix sum jismein hum check karte hai ki mereko chahaiye sum 3 lekin sum hai abhi 9 toh 9-3 = 6 , pehle se map mein hai, aur agar hai toh uska index se subtract karke maxlen ko update karte hai
+
+code : public class practice{
+    static int method(int[] arr,int target)
+    {
+        HashMap<Integer,Integer> map = new HashMap<>();
+        int maxlen=0,n=arr.length,prefsum=0;
+        for(int i=0;i<n;i++)
+        {
+            prefsum+=arr[i];
+            if(prefsum==target)
+            {
+                maxlen=Math.max(maxlen,i+1);
+            }
+            int back=prefsum-target;
+            if(map.containsKey(back))
+            {
+                int index=i-map.get(back);
+                maxlen=Math.max(maxlen,index);
+            }
+            map.put(prefsum,i);
+        }
+        return maxlen;
+    }
+    public static void main(String[] args) {
+        int[] arr={1,-1,5,-2,3};
+        int target=3;
+        int ans=method(arr,target);
+        System.out.println(ans);
+    }
+}
+ but there is edge case which have zeroes arr=[2,0,0,3] is case mein sahi maxlen nhi aayega kyuki 2,0 (map mein gaya) uske baad phir same key 2 pe(2,1) hogaya aur uske baad (2,2) hogaya toh mera longest subarray tha 0,0,3 (3 length ka) lekin update hoke subarray chota hogaya, zero ke case mein isliye code change
+so , we will  do a slight change ki agar same prefsum pehle se map mein hai hai toh we don't update that partciular key in map nhi toh humara subarray ka length chota hojayega
+
+code:public class practice{
+    static int method(int[] arr,int target)
+    {
+        HashMap<Integer,Integer> map = new HashMap<>();
+        int maxlen=0,n=arr.length,prefsum=0;
+        for(int i=0;i<n;i++)
+        {
+            prefsum+=arr[i];
+            if(prefsum==target)
+            {
+                maxlen=Math.max(maxlen,i+1);
+            }
+            int back=prefsum-target;
+            if(map.containsKey(back))
+            {
+                int index=i-map.get(back);
+                maxlen=Math.max(maxlen,index);
+            }
+            if(!map.containsKey(prefsum)) { map.put(prefsum,i); }
+        }
+        return maxlen;
+    }
+    public static void main(String[] args) {
+        int[] arr={2,0,0,3};
+        int target=3;
+        int ans=method(arr,target);
+        System.out.println(ans);
+    }
+}
+
+toh ye jo 3 approach hai brute : 3 loop aur phir better : 2loop aur phir optimal : hashing and prefsum concept 
+ye positives+negatives ke liye optimal hai lekin sirf positives ke liye nhi hai uske liye optimal code aage hai
+
+Optimal for only positives 
+
+code:public class practice{
+    static int method(int[] arr,int k)
+    {
+        int l=0,r=0,maxlen=0,n=arr.length,sum=0;
+        while(r<n)
+        {
+            sum+=arr[r];
+            while(sum>k)
+            {
+                sum-=arr[l];
+                l++;
+            }
+            if(sum==k) { maxlen=Math.max(maxlen,r-l+1); }
+            r++;
+        }
+        return maxlen;
+    }
+    public static void main(String[] args) {
+        int[] arr={1,2,2,0,3,1,1};
+        int k=3;
+        int ans = method(arr,k);
+        System.out.println(ans);
+    }
+}
+
+T.C. -> O(2N)
+S.C. -> O(1)
+
+(8) Largest Element in an Array
+
+BruteForce: sort kardo aur jo last mein element aayega woh largest hai
+Time Complexity: O(N*log(N)) {for sorting}
+Space Complexity: O(n)
+
+optimal: Using a max variable and traverse on array
+Complexity Analysis -> Time Complexity: O(N),Space Complexity: O(1)
+
+(9) Second largest element in an array
+
+BruteForce: sort kardo aur last second element tumhara second largest hai (work only if array has all unique elements)
+and if array has duplicate elements, tab hum last second element se loop chalayenge aur check karenge kya tum largest ke equal nhi ho , aur agar aisa koi element hoga toh wahi mera second largest hai
+
+Time Complexity: O(NlogN), For sorting the array
+Space Complexity: O(1)
+
+loop to avoid duplication: 
+                        int largest=arr[n-1]; 
+                        for(int i=n-2;i>=0;i--)
+                           {
+                            if(arr[i]!=largest){
+                                secondl=arr[i];
+                                break;
+                            }
+                           }
+
+better approach: we will do this in 2 pass , first pass mein largest element nikal lenge aur second pass mein hum slargest naam ka variable lenge aur cehck karenge traverse karte hue hey element are you greater than slargest and not equal to largest, toh  at last you are my second largest
+Time Complexity: O(N)+O(N) {for two loops } = O(2N)
+Space Complexity: O(1)
+
+Optimal : jo kaam 2 pass mein kar rahe hai ab usko ek pass mein hi karenge
+
+code: for(int i=0;i<n;i++)
+    {
+        if(arr[i]>largest)
+        {
+            slargest=largest;
+            largest=arr[i];
+        }
+        else if(arr[i]<largest && arr[i]>slargest)
+        {
+            slargest=arr[i];
+        }
+    }
+
+Time Complexity: O(N)
+Space Complexity: O(1)    
+
+(10) check if array is sorted 
+for this there is straight forward directly optimal solution
+
+code:public class practice{
+    static boolean isSorted(int[] arr)
+    {
+        for(int i=1;i<arr.length;i++)
+        {
+            if(arr[i]>=arr[i-1])
+            {
+
+            }
+            else{
+                return false;
+            }
+        }
+        return true;
+    }
+    public static void main(String[] args) {
+        int[] arr={ 90, 80, 100, 70, 40, 30 };
+        boolean ans=isSorted(arr);
+        System.out.println(ans);
+    }
+}
+
+T.C.-> O(N)
+S.C. -> O(1)
+
+(11) -> Remove Duplicates from Sorted Array
+
+my brute force:code->
+    class Solution {
+        public int removeDuplicates(int[] nums) {
+            int i=0,j=1;
+            int n=nums.length;
+            while(j<n && i<=n-2)
+            {
+                if(nums[i]!=nums[j])
+                {
+                    nums[i+1]=nums[j];
+                    i++;
+                }
+                j++;
+            }
+            return i+1;
+        }
+    }
+
+but striver brute force : ye mai socha tha ki hashset se kar sakte hai lekin ye nhi soch paya tha ki wapas same array mein change kaise karenge
+toh isme hum hashset lenge saare elements array mein se hashset mein daal denge uske baad hashset se array mein daal denge
+code:class Solution {
+    public int removeDuplicates(int[] nums) {
+        HashSet<Integer> set=new HashSet<>();
+        for(int i=0;i<nums.length;i++)
+        {
+            set.add(nums[i]);
+        }
+        int k=set.size();
+        int index=0;
+        for(int num : set){
+            nums[index++]=num;
+        }
+        return k;
+    }
+}
+
+// lekin leet pe saare testcase pass nhi honge kyuki hashset order maintain nhi karta hai toh kisi bhi order mein answer aayega
+Time complexity: O(n*log(n)){adding into set}+O(n){adding into array from set}
+Space Complexity: O(n) 
+
+
+Optimal : my optimal was my brute but striver optimal
+here code:  
+        int i=0 
+        for (int j = 1; j < arr.length; j++) {
+            if (arr[i] != arr[j]) {
+                i++;
+                arr[i] = arr[j];
+            }
+        }
+        return i + 1;
+
+Complexity Analysis:Time Complexity: O(N) , Space Complexity: O(1)
+
+(12)Count Subarray sum Equals K 
+
+brute force: 3 loop lagega aur tisra loop i aur j ke bich mein hi subarray ka sum count karega, jab j increment hoga tab sum 0 se initialize hoga, aur dhyan dene wali baat ki jab k ka loop falso ho tabhi count ko increment karna hai , warna baar baar ek hi subarray ko count kar lega
+code:import java.util.*;
+public class practice{
+    static int method(int[] arr,int k)
+    {
+        int count=0;
+        for(int i=0;i<arr.length;i++)
+        {
+            for(int j=i;j<arr.length;j++)
+            {
+                int sum=0;
+                for(int l=i;l<=j;l++)
+                {
+                    sum+=arr[l];
+                }
+                if(sum==k)
+                {
+                    count+=1;
+                }
+            }
+        }
+        return count;
+    }
+    public static void main(String[] args) {
+        int[] arr={1,2,3,-3,1,1,1,4,2,-3};
+        int k=3;
+        int ans = method(arr,k);
+        System.out.println(ans);
+    }
+}
+
+T.C. -> O(N3)
+S.C. -> O(1)
+
+better : optimized that with 2 loop, same kaam jo 3 loop se kar rahe the usko 2 loop se kar diye
+
+code:class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int n=nums.length,count=0;
+        for(int i=0;i<n;i++)
+        {
+            int sum=0;
+            for(int j=i;j<n;j++)
+            {
+                sum+=nums[j];
+                if(sum==k)
+                {
+                    count+=1;
+                }
+            }
+        }
+        return count;
+    }
+}
+
+T.C. -> O(N2)
+S.C. -> O(1)
+
+Optimal: hum yaha exclude karke dekh rahe hai ki agar x-k hat jayega toh mil jayega ek subarray , agar x-k map mein pehle se hai
+storing of count is very very important in hashmap kyuki agar 2 subarray hai jisko hatane pe sum ke equal hojayega 
+matlab ki jitna k mujhe chahiye utne mein se kitne saare x-k mai hata dunga toh k mil jayega , kyuki 2 baar alag alag x-k hatayenge toh 2 alag subarray ban jayega , that's the main logic and intuition. Read carefully
+
+code:class Solution {
+    public int subarraySum(int[] nums, int k) {
+        HashMap<Integer,Integer> map=new HashMap<>();
+        int count=0,prefsum=0,n=nums.length;
+        map.put(0,1);
+        for(int i=0;i<n;i++)
+        {
+            prefsum+=nums[i];
+            int back=prefsum-k;
+            if(map.containsKey(back))
+            {
+                count+=map.get(back);
+            }
+            map.put(prefsum,map.getOrDefault(prefsum,0)+1);
+        }
+        return count;
+    }
+}

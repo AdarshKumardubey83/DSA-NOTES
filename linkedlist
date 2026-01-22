@@ -1,0 +1,1617 @@
+Linked List
+===============================================================================================================
+
+definition:Linked List ek aisa data structure hai jisme data ko alag-alag memory locations mein store kiya jaata hai, aur har data ke saath ek pointer hota hai jo agle data ka address batata hai.
+
+Linked List ke Faayde (Advantages)
+🔍 Feature	💡 Faayda
+Dynamic Size  -> 	Memory ko run-time pe allocate karta hai, isliye size fix nahi hota.
+Easy Insertion/Deletion  ->	Kisi bhi position pe data insert/delete karna easy hota hai (especially beginning/middle).
+No Wastage of Memory ->	Memory tabhi allocate hoti hai jab zarurat ho — unlike arrays jisme fixed size hota hai.
+Efficient for Frequent Updates  ->	Jab data baar-baar add/remove ho raha ho, linked list better perform karta hai.
+
+
+Linked List ke Nuksan (Disadvantages)
+⚠️ Issue	😓 Nuksan
+No Direct Access  ->	Indexing nahi hoti — har node ko sequentially traverse karna padta hai.
+Extra Memory for Pointers ->	Har node ke saath ek pointer bhi store hota hai, jo extra memory leta hai.
+Slower Search ->	Agar kisi specific element ko dhoondhna ho, toh pura list traverse karna padta hai.
+Complex Implementation ->	Arrays ke comparison mein thoda zyada coding effort lagta hai (especially doubly or circular linked lists).
+
+
+where it is used : stack aur queues mein kyuki linked list has no fixed size or stack also has no fixed size , push karoge toh badhta jayega aur pop karoge toh nikalta jayega.
+
+real life use : tab kholte jate hai kisi website ka kholte hi jate hai aur back hona hota hai hote jate hai
+
+Self defined data type -> In linked lists, a self-defined data type refers to a custom structure or class that represents each node. This is essential because built-in types like int, float, or string can't hold both data and pointers. So we define our own data type — typically called Node — to encapsulate:
+
+The data we want to store
+
+The reference to the next (and possibly previous) node
+
+Self Define Data type
+=============================
+
+This concept: this isliye use karte hai kyuki same name ka parameter  aur class variable agar same hogaya toh value default chali jati hai
+
+Example:
+ class Student {
+    int age;
+
+    Student(int age) {
+        age = age;   // ❌ WRONG
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Student s = new Student(20);
+        System.out.println(s.age);   // ❗ Output: 0 (NOT 20)
+    }
+}
+
+
+correct approach to use it : 
+class Student {
+    int age;
+    Student(int age) {
+        this.age = age;   // ✔️ class age = parameter age and output will be 20 , because now this is referring to current object
+    }
+}
+ 
+
+public class StriverLinkedlist {
+    public static class Node{
+        int data;
+        Node next;
+        public Node(int data1, Node next1) {
+            data = data1;
+            next = next1;
+        }
+    }
+    public static void main(String[] args) {
+        int arr[] = {2,3,4,5};
+        Node temp = new Node(arr[0],null);
+        System.out.println(temp.data);
+    }
+}
+//
+
+Striver ka code thoda hatke rehta hai isliye mujhe thoda dhyan dena hoga , accha code likhne pe not just only but it should be clean also .
+ for example my code:static Node insertionAthead(Node head,int el){
+        if(head==null){
+            Node temp=new Node(el,null);
+            head=temp;
+            return head;
+        }
+        Node temp=new Node(el,null);
+        temp.next=head;
+        head=temp;
+        return head;
+    }
+
+striver code:static Node insertionAthead(Node head,int el){
+        Node temp=new Node(el,head);
+        return temp;
+    }
+
+Doubly linked list (DLL)
+======================================================
+A doubly linked list (DLL) is a type of linked list where each node contains three parts:
+
+Data – the actual value stored in the node.
+
+Next pointer – a reference to the next node in the list.
+
+Previous pointer – a reference to the previous node in the list.
+
+This structure allows traversal in both directions—forward and backward—unlike a singly linked list which only allows forward traversal. aur bhi jitn question hai IntelliJ mein hai.
+
+qustion1:Reverse a doubly linked list
+brute force approach : reverse karna hai na toh  abs data ka jagah badal to Pehle baar mein traverse karke data ko stack mein push kardo uske baad dusri baar traverse karke data ko pop karke aage se dalte jao.
+
+
+code:class Solution {
+    public DLLNode reverseDLL(DLLNode head) {
+        Stack<Integer> st = new Stack<>();
+        DLLNode temp=head;
+        while(temp!=null)
+        {
+            st.push(temp.data);
+            temp=temp.next;
+        }
+        temp=head;
+        while(temp!=null)
+        {
+            temp.data=st.pop();
+            temp=temp.next;
+        }
+        return head;
+    }
+}
+
+Complexity Analysis
+Time Complexity : O(2N) During the first traversal, each node's value is pushed into the stack once, which requires O(N) time. Then, during the second iteration, the values are popped from the stack and used to update the nodes. Space Complexity : O(N) This is because we are using an external stack data structure. At the end of the first iteration, the stack will hold all N values of the doubly linked list therefore the space required for stack is directly proportional to the size of the input doubly linked list.
+
+
+Optimal Approach : iske liye mai bahut jada variable leke soch raha tha lekin utna sochna nhi tha, just basic stuff how we swap two value, it's same like, isme bas dhyan rakhna hai ki naya head kya hojayega 
+
+Code: class Solution {
+    public DLLNode reverseDLL(DLLNode head) {
+        DLLNode current=head,last=null;
+        if(head==null || head.next==null) { return head; }
+        while(current!=null)
+        {
+            last=current.prev;
+            current.prev=current.next;
+            current.next=last;
+            current=current.prev;
+        }
+        return last.prev;
+    }
+}
+
+We should always focus on the thought process: ki kaise ye soche logic ki swapping ke liye 2 number ko kaise karte hai swap( waha se we get the intuition about the third variable).
+
+Time Complexity : O(N) We only have to traverse the doubly linked list once, hence our time complexity is O(N).
+
+Space Complexity : O(1), as the reversal is done in place.
+
+
+question 2) Add 2 numbers in Linked List
+=======================================================
+My approach which I was thinking : mai usme modify kar de raha tha input linked list ko jiski vajah se many test cases ke liye mera code fail kar raha tha
+
+mujhe approach sunne ke baad problem aa rahi thi: ki bache hue l1 ya l2 ko mai manage toh kar dunga lekin same lines repeat hoga , basically bache hue l1 linkedlist ya l2 linked list ko kaise wapas se sum ko karna hai but that was not good logic
+
+Now Striver Approach : ek global carry maintain karna hai aur carry ke liye modulus karo kyuki , adhik se adhik single digit numbers ka sum 18 hoga aur hume modulus karne pe mil jayega aur carry ke liye quotient nikalo sum/10 , har baar 1 hi quotient aayega kyuki max sum  can be 18 and 18/10 =1 , toh har baar maintain hoga , at last agar carry mein 1 reh jata hai toh usko last mein resulting list mein add karna hai
+
+code: class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode t1 = l1, t2 = l2, curr = dummy;
+        int carry = 0;
+        while(t1!=null || t2!=null)
+        {
+            int sum = carry;
+            if(t1!=null) sum+=t1.val;
+            if(t2!=null) sum+=t2.val;
+            curr.next = new ListNode(sum%10);
+            curr=curr.next;
+            carry=sum/10;
+            if(t1!=null) t1=t1.next;
+            if(t2!=null) t2=t2.next;
+        }
+        if(carry!=0)
+        {
+            curr.next=new ListNode(carry);
+        }
+        return dummy.next;
+    }
+}
+
+T.C. -> O(Math.max(N1,N2)) WHERE N1 AND N2 ARE LENGTH OF linkedlist l1 AND l2 RESPECTIVELY
+S.C. -> O(Math.max(N1,N2)) but remember this is used for storing the result , in question which is asking , so technically I am not using anything to solve the question, I need to store the result . I can't optimize it means ye space complexity mein consider nhi hoga
+
+
+question 3) Odd Even Linked List : My approach : mai logic toh sahi soch raha tha lekin bas loop ko break nhi kar pa raha tha , I created either infinite loop or null pointer exception but maine chatgpt se apne logic ko hi sahi karwa liya
+========================================================
+
+aur mera approach sahi is tarike se hogaya : ya toh tum 2 kadam piche ho toh null pe pahuch jaoge , ya toh 1 kadam piche ho toh -> else mein jate hi break kar jaoge(ye mai nhi soch paya tha)
+
+code:
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        ListNode newList = new ListNode(-1);
+        ListNode curr = newList;
+        if(head==null || head.next==null || head.next.next==null) return head;
+        ListNode odd = head, even = head.next;
+        while(odd!=null)
+        {
+            curr.next = new ListNode(odd.val);
+            curr = curr.next;
+            if(odd.next!=null) odd = odd.next.next;
+            else break;
+        }
+        while(even!=null)
+        {
+            curr.next = new ListNode(even.val);
+            curr = curr.next;
+            if(even.next!=null) even = even.next.next;
+            else break;
+        }
+        return newList.next;
+    }
+}
+
+
+question 4) Sort a Linked List of 0's , 1's and 2's
+=========================================================
+
+My brute force approach : 
+class Solution {
+    public Node segregate(Node head) {
+        // code here
+        int count0=0,count1=0,count2=0;
+        Node temp = head, temp1=head;
+        while(temp!=null)
+        {
+            if(temp.data==0) count0++;
+            else if(temp.data==1) count1++;
+            else count2++;
+            temp=temp.next;
+        }
+        for(int i=0;i<count0;i++)
+        {
+            temp1.data=0;
+            temp1=temp1.next;
+        }
+        for(int i=count0;i<count0+count1;i++)
+        {
+            temp1.data=1;
+            temp1=temp1.next;
+        }
+        for(int i=count0+count1;i<count0+count1+count2;i++)
+        {
+            temp1.data=2;
+            temp1=temp1.next;
+        }
+        return head;
+    }
+}
+
+Striver Brute Force: class Solution {
+    public Node segregate(Node head) {
+        // code here
+        int count0=0,count1=0,count2=0;
+        Node temp = head;
+        while(temp!=null)
+        {
+            if(temp.data==0) count0++;
+            else if(temp.data==1) count1++;
+            else count2++;
+            temp=temp.next;
+        }
+        temp = head;
+        while(temp!=null)
+        {
+            if(count0>=1)
+            {
+                temp.data=0;
+                count0--;
+            }
+            else if(count1>=1)
+            {
+                temp.data=1;
+                count1--;
+            }
+            else{
+                temp.data=2;
+                count2--;
+            }
+            temp=temp.next;
+        }
+        return head;
+    }
+}
+
+T.C. -> O(2N)
+
+Both codes traverse n nodes only once in the rewrite stage,
+but your code uses 3 separate loops → 3× loop overhead → CPU does far more instructions → JVM optimization fails → TLE occurs.
+
+Your code also traverses the list only twice (same as Striver), but your second traversal is split into 3 loops, causing more CPU instructions, more loop overhead, and fewer optimizations → leading to TLE on very large inputs.
+
+Optimal Approach: 
+
+Question 5)Remove Nth Node from End of Linked List
+=========================================================
+My brute force Logic and Striver Brute Force Logic is Same , just way of doing is different 
+code: class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode temp = head;
+        int m = 0;
+        while(temp!=null)
+        {
+            temp=temp.next;
+            m+=1;
+        }
+        if(n==m) return head.next;
+        temp = head;
+        for(int i =0;i<m-n-1;i++)
+        {
+            temp = temp.next;
+        }
+        temp.next = temp.next.next;
+        return head;
+    }
+}
+
+Striver Brute Force:
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode temp = head;
+        int m = 0;
+        int res = 0;
+        while(temp!=null)
+        {
+            temp=temp.next;
+            m+=1;
+        }
+        if(n==m) return head.next;
+        temp = head;
+        res = m-n;
+        while(temp!=null)
+        {
+            res--;
+            if(res==0) break;
+            temp=temp.next;
+        }
+        temp.next = temp.next.next;
+        return head;
+    }
+}
+
+T.C. -> O(len) + O(len-N) , if n==1 toh last element delete karna padega toh both loops will run n times , so T.C. ->O(2N)
+S.C. -> O(1)
+
+Optimal: isko brute force ke logic se hi banaya hai , matlab ki brute foce ke logic se hi optimal logic banaya hai , jaise brute force mein hume total length count karna pad raha tha ,uske baad total length mein se hum n ko minus kar rahe the taki us node tak pahuch sake , toh we just eliminated counting length loop here 
+how we eliminated: ek pointer ko pehle hi hum n times chala de rahe hai , kyuki agar piche se 4th element delete karna hai , if size is 10 then tumko aage se 6 pe aana padega , toh fast pehle hi 4 tak chala gaya aur bacha hua 6 slow ke saath chal jayega , aur ek baat dhyan dena hai ek pehle tak jana hai taki delete kar sake isliye woh bhi manage ho ja raha hai kyuki fast bhi head pe hai aur slow bhi head pe
+simple: 10-4 = 6 , toh piche se 4 element delete karna hai toh aage se head ke aage 4 aur aajao , bas phir slow ko leke baki chale jao , sahi jagah pe pahuch jaoge
+
+code: class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode fast = head, slow = head;
+        for(int i=0;i<n;i++)
+        {
+            fast=fast.next;
+        }
+        while(fast.next!=null)
+        {
+            fast=fast.next;
+            slow=slow.next;
+        }
+        if(fast==null) return head.next;
+        slow.next = slow.next.next;
+        return head;
+    }
+}
+
+Question 6) Reverse Linked List
+=========================================================
+Brute Force Approach : reverse karna hai tih pehle stack mein daal denge aur uske baad stack se nikal ke linkedlist mein daal denge starting se 
+
+code:class Solution {
+    public ListNode reverseList(ListNode head) {
+        Stack<Integer> st = new Stack<>();
+        ListNode temp = head;
+        while(temp!=null)
+        {
+            st.push(temp.val);
+            temp = temp.next;
+        }
+        temp=head;
+        while(temp!=null)
+        {
+            temp.val=st.pop();
+            temp = temp.next;
+        }
+        return head;
+    }
+}
+
+T.C. -> O(2N)
+S.C. -> O(N) (for stack)
+
+Optimal approach : with the help of 3 pointers we are reversing in place
+
+code: class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode temp = head, prev = null;
+        while(temp != null)
+        {
+            ListNode front = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = front;
+        }
+        return prev;
+    }
+}
+
+T.C. -> O(N)
+S.C. -> O(1)
+
+Recursive : sabse pehle sabse chota problem solve karo , uske baad usse bada problem solve karo , aise karne se hi logic banega aur every step pe dekho kya return ho raha hai
+code: class Solution {
+    public ListNode reverseList(ListNode head) {
+        if(head==null || head.next==null) return head;
+        ListNode newHead = reverseList(head.next);
+        ListNode front = head.next;
+        front.next = head;
+        head.next = null;
+        return newHead; 
+    }
+}
+
+T.C. -> O(N)
+S.C. -> O(N) (for recursion stack)
+
+Question 7) Palindrome Linked List
+=========================================================
+Brute Force Approach : pehle stack mein push kado , taki phir reverse order mein check kar sake ki same hai ki nhi , uske baad check karte jao ki saare element same hai ki nhi aur uske baad stack se pop karte jao
+
+code: class Solution {
+    public boolean isPalindrome(ListNode head) {
+        Stack<Integer> st = new Stack<>();
+        ListNode temp = head;
+        while(temp!=null)
+        {
+            st.push(temp.val);
+            temp = temp.next;
+        }
+        temp = head;
+        while(temp!=null)
+        {
+            int data = st.pop(); 
+            if(temp.val!=data)
+            {
+                return false;
+            }
+            temp = temp.next;
+        }
+        return true;
+    }
+}
+
+T.C. -> O(2N)
+S.C. -> O(N) (for stack)
+
+Optimal Approach: first middle nikalne ke baad reverse kardo aage ka uske baad pointer lagake dono half ko check karlo equal hai ki nhi , if equal then true, yes palindrome and if false then not palindrome
+
+code: class Solution {
+    public ListNode reverse(ListNode head)
+    {
+        ListNode current = head;
+        ListNode prev = null;
+        while(current!=null)
+        {
+            ListNode after = current.next;
+            current.next = prev;
+            prev = current;
+            current = after;
+        }
+        return prev;
+    }
+    public boolean isPalindrome(ListNode head) {
+        if(head==null || head.next==null) return true;
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast.next!=null && fast.next.next!=null)
+        {
+            slow = slow.next;                ---> O(N/2)
+            fast = fast.next.next;
+        }
+        ListNode newHead= reverse(slow.next);  ---> O(N/2)
+        ListNode first = head, second = newHead;
+        while(second!=null)               ---> O(N/2)
+        {
+            if(first.val!=second.val)
+            {
+                reverse(newHead);   <-      ---> O(N/2)
+                return false;
+            }
+            first = first.next;
+            second = second.next;
+        }
+        return true;
+    }
+}
+
+Note : reverse(newHead) is an important line for interviews, because it is supposed that you should not alter the given data. that's why before returning false we are doing again reverse , so that our original data should back again.
+
+T.C. -> O(N/2)+O(N/2)+O(N/2)+O(N/2) = O(N)+O(N) = O(2N) => T.C.(O(2N))
+S.C. -> O(1)
+
+Question 8) Add 1 to a linked list
+=======================================
+My Brute Force Approach : pehle linkedlist ko reverse karo aur uske baad carry ko 1 set karke rakho , taki piche se add kar sake aur uske liye logic , carry management and at last again reverse
+code: class Solution {
+    public Node reverse(Node head)
+    {
+        Node prev = null;
+        Node current = head;
+        while(current!=null)
+        {
+            Node after = current.next;
+            current.next=prev;
+            prev = current;
+            current = after;
+        }
+        return prev;
+    }
+    public Node addOne(Node head) {
+        // code here.
+        Node temp = head;
+        temp = reverse(temp);
+        Node ans = temp;
+        int cy = 1;
+        while(temp!=null)
+        {
+            int sum = temp.data+cy;
+            if(temp.next==null)
+            {
+                if(sum>9)
+                {
+                    temp.data=0;
+                    temp.next = new Node(1);
+                    break;
+                }
+                else{
+                    temp.data = sum;
+                    break;
+                }
+            }
+            if(sum>9) 
+            {
+                temp.data=0;
+                cy = 1;
+            }
+            else{
+                temp.data=sum;
+                cy = 0;
+            }
+            temp = temp.next;
+        }
+        temp = ans;
+        ans=reverse(temp);
+        return ans;
+    }
+}
+My logic also worked and passed all test cases but Striver code is more cleaner than mine
+
+Striver Brute Force Approach: same logic like mine but some quick better points to improve : like if there is no carry then break directly , because agar carry aage ja hi nhi raha toh aage kuch hoga hi nhi , kyuki +1 sirf ek jagah pe hi hua hai and overall logic is also cool
+
+code: class Solution {
+    public Node reverse(Node head)
+    {
+        Node prev = null;
+        Node current = head;
+        while(current!=null)
+        {
+            Node after = current.next;
+            current.next=prev;
+            prev = current;
+            current = after;
+        }
+        return prev;
+    }
+    public Node addOne(Node head) {
+        // code here.
+        head = reverse(head);
+        Node temp = head;
+        int cy = 1;
+        while(temp!=null)
+        {
+            temp.data=temp.data+cy;
+            if(temp.data<10)
+            {
+                cy = 0;
+                break;
+            }
+            else{
+                temp.data=0;
+                cy = 1;
+            }
+            temp = temp.next;
+        }
+        if(cy==1)
+        {
+            Node newNode = new Node(1);
+            head = reverse(head);
+            newNode.next = head;
+            return newNode;
+        }
+        head = reverse(head);
+        return head;
+    }
+}
+
+T.C. -> O(3n) , 2 times reversal and 1 time traversal
+S.C. -> O(1)
+
+Question 9) Find the intersection point of linked list
+BruteForce Approach : Using HashMap
+code:public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode tempA = headA;
+        ListNode tempB = headB;
+        HashMap<ListNode, Integer> map = new HashMap<>();
+        while(tempA!=null)
+        {
+            map.put(tempA,map.getOrDefault(tempA,0)+1);
+            tempA = tempA.next;
+        }
+        while(tempB!=null)
+        {
+            if(map.containsKey(tempB))
+            {
+                return tempB;
+            }
+            tempB=tempB.next;
+        }
+        return null;
+    }
+}
+
+T.C. = O(N1 + N2) average case (Java HashMap operations = O(1) average).
+N1 and N2 simply refer to:
+
+✔ N1 = Length of Linked List A
+✔ N2 = Length of Linked List B
+
+S.C: O(N1) , because we are storing first liked list 
+
+Better: /**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode tempA = headA;
+        ListNode tempB = headB;
+        int lengthA = 0 , lengthB = 0;
+        while(tempA!=null)
+        {
+            lengthA++;
+            tempA = tempA.next;
+        }
+        while(tempB!=null)
+        {
+            lengthB++;
+            tempB = tempB.next;
+        }
+        int steps = 0;
+        tempA = headA;
+        tempB = headB;
+        if(lengthA==lengthB)
+        {
+            steps = 0;
+        }
+        else if(lengthA>lengthB)
+        {
+            steps = lengthA-lengthB;
+            for(int i=1;i<=steps;i++)
+            {
+                tempA = tempA.next;
+            }
+        }
+        else{
+            steps = lengthB-lengthA;
+            for(int i=1;i<=steps;i++)
+            {
+                tempB = tempB.next;
+            }
+        }
+        while(tempA!=null)
+        {
+            if(tempA==tempB)
+            {
+                return tempA;
+            }
+            tempA = tempA.next;
+            tempB = tempB.next;
+        }
+        return null;
+    }
+}
+
+Striver Better: Striver ka code jada clean aur better hai incomparison of my code
+public class Solution {
+    public ListNode collisionPoint(ListNode t1, ListNode t2, int steps)
+    {
+        while(steps>0)
+        {
+            steps--;
+            t2=t2.next;
+        }
+        while(t1!=t2)
+        {
+            t1=t1.next;
+            t2=t2.next;
+        }
+        return t1;
+    }
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode tempA = headA;
+        ListNode tempB = headB;
+        int lengthA = 0 , lengthB = 0;
+        while(tempA!=null)
+        {
+            lengthA++;
+            tempA = tempA.next;
+        }
+        while(tempB!=null)
+        {
+            lengthB++;
+            tempB = tempB.next;
+        }
+        if(lengthA<lengthB) return collisionPoint(headA,headB,lengthB-lengthA);
+        else return collisionPoint(headB,headA,lengthA-lengthB);
+    }
+}
+
+T.C. -> O(N1)+O(N2)+O(N2-N1)+O(N1) = O(N1+2N2)
+S.C. -> O(1)
+
+Optimal Approach: dono saath mein aage badh rahe hai aur jaise hi null ho rahe hai toh un dono ko unke opposite head pe bhej rahe hai, jo aage hoga woh jaldi pahuch ke barabar pe aajayega
+code: public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode temp1 = headA;
+        ListNode temp2 = headB;
+        if(headA==null || headB==null) return null;
+        while(temp1!=temp2)
+        {
+            temp1=temp1.next;
+            temp2=temp2.next;
+            if(temp1==temp2) return temp1;
+            if(temp1==null) temp1=headB;
+            if(temp2==null) temp2=headA;
+        }
+        return temp1;
+    }
+}
+
+Question 10) Find the middle element of linked list
+Brute Force Approach: pehle total count nikal lo(size of ll) aur in case of both odd and evn ll , the middle will be at (n/2+1) toh ek aur loop lagake is element tak pahuch jao
+
+code: class Solution {
+    public ListNode middleNode(ListNode head) {
+        if(head==null || head.next==null) return head;
+        ListNode temp = head;
+        int cnt = 0;
+        while(temp!=null)
+        {
+            cnt+=1;
+            temp=temp.next;
+        }
+        temp=head;
+        int reach = (cnt/2+1);
+        while(reach>1)
+        {
+            reach--;
+            temp = temp.next;
+        }
+        return temp;
+    }
+}
+
+T.C. -> O(N+N/2) one time full traversal and one time half traversal
+S.C. -> O(1)
+
+Optimal: Using Tortoise and Hare Algorithm(concept of slow and fast pointers)
+code: class Solution {
+    public ListNode middleNode(ListNode head) {
+        if(head==null || head.next==null) return head;
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast!=null && fast.next!=null)
+        {
+            slow=slow.next;
+            fast=fast.next.next;
+        }
+        return slow;
+    }
+}
+
+Question 11) Detect a loop or cycle in linkedList
+
+Brute Force Approach : koi linkedlist mein cycle hai ye pata chalega aise ki : jab traverse karte hue hum dobara usi linkedlist pe pahuch jayenge, so we will use HashMap to see whether this particular linkedlist is arrive earlier or not
+
+code: public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if(head==null || head.next==null) return false;
+        HashMap<ListNode,Integer> map = new HashMap<>();
+        ListNode temp = head;
+        while(temp!=null)
+        {
+            if(map.containsKey(temp))
+            {
+                return true;
+            }
+            map.put(temp,map.getOrDefault(temp,0)+1);
+            temp = temp.next;
+        }
+        return false;
+    }
+}
+
+T.C. -> O(N*2*logN) traversal*depending on your map takes
+S.C. -> O(N) for storing all the nodes
+
+Optimal Approach: using Tortoise and Hare Algorithm , slow -> 1x , fast -> 2x 
+
+code:public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if(head==null || head.next==null) return false;
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast!=null && fast.next!=null)
+        {
+            slow=slow.next;
+            fast=fast.next.next;
+            if(fast==slow)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+T.C. -> 0(N)
+S.C. -> 0(1)
+
+slow 1x aur fast 2x toh so if distance is d , at every step distance is decreasing d-1 , so d%1==0 , isliye it is guranteed ki slow and fast will meet , that;s why 1x and 2x . Otherwise why not 3x because every d distance will  not be divisible by 3
+
+Quetsion 12) Length of loop in ll: we will be using same concept , which we used in detect loop , so brute force will be uing hashing , because we have to remember
+
+My Brute Force: 
+
+class Solution {
+    public int lengthOfLoop(Node head) {
+        // code here
+        if(head==null) return 0;
+        HashMap<Node,Integer> map = new HashMap<>();
+        Node temp = head;
+        while(temp!=null)
+        {
+            map.put(temp,map.getOrDefault(temp,0)+1);
+            if(map.get(temp)>1)
+            {
+                break;
+            }
+            temp=temp.next;
+        }
+        if(temp==null) return 0;
+        Node check = temp;
+        temp = temp.next;
+        int cnt = 1;
+        while(check!=temp)
+        {
+            cnt++;
+            temp=temp.next;
+        }
+        return cnt;
+    }
+}
+
+T.C. -> O(2N)
+S.C. -> O(N)
+
+Striver Brute Force: isme hum ek variable maintain kar lenge , first visit sabka store kar lenge , aur jab next visit hoga tab first visit se latest visit subtract kar denge, wahi hoga length.
+
+code: class Solution {
+    public int lengthOfLoop(Node head) {
+        // code here
+        if(head==null) return 0;
+        HashMap<Node,Integer> map = new HashMap<>();
+        Node temp = head;
+        int timer = 0;
+        while(temp!=null)
+        {
+            timer++;
+            if(map.containsKey(temp))
+            {
+                int ans = timer-map.get(temp);
+                return ans;
+            }
+            map.put(temp,timer);
+            temp=temp.next;
+        }
+        
+        return 0;
+    }
+}
+
+T.C. -> O(N)
+S.C. -> O(N)
+
+Optimal Approach: Using Tortoise and Hare Algorithm : pehle cycle pe pahuch jao uske baad waha se count karna shuru karo pura loop
+
+Code: class Solution {
+    public int findlength(Node slow, Node fast)
+    {
+        int cnt = 1;
+        fast=fast.next;
+        while(slow!=fast)
+        {
+            cnt++;
+            fast=fast.next;
+        }
+        return cnt;
+    }
+    public int lengthOfLoop(Node head) {
+        // code here
+        Node slow = head;
+        Node fast = head;
+        while(fast!=null && fast.next!=null)
+        {
+            slow=slow.next;
+            fast=fast.next.next;
+            if(slow==fast) return findlength(slow,fast);
+        }
+        return  0;
+    }
+}
+
+T.C. -> O(N)
+S.C. -> O(1)
+
+
+Question 13) Delete the Middle Node of a LL
+
+Brute Force Approach: pehle length nikal lo aur uske baad length ke half  middle se ek piche pahuch jao aur pointers ko change kardo
+
+Code:  class Solution {
+    public ListNode deleteMiddle(ListNode head) {
+        if(head == null || head.next==null) return null;
+        ListNode temp = head;
+        int length = 0;
+        while(temp!=null)
+        {
+            length++;
+            temp=temp.next;
+        }
+        temp = head;
+        for(int i=0;i<(length/2)-1;i++)
+        {
+            temp=temp.next;
+        }
+        temp.next=temp.next.next;
+        return head;
+    }
+}
+
+T.C. : O(N+N/2)
+S.C. : O(1)
+
+Optimal Approach: Using Tortoise and Hare Algorithm
+mai jabhi karta hu toh fast ke liye naya step banata hu ki fats.next.next.next karke but striver make logic ki , with normal middle condition middle pe pahuch jayega , but hume toh ek kam pe jana hai taki middle ko delete kar sake isliye hum slow ko ek step kam chalayenge, skip 1 step
+
+code: class Solution {
+    public ListNode deleteMiddle(ListNode head) {
+        if(head == null || head.next==null) return null;
+        ListNode slow = head,fast=head;
+        fast=fast.next.next;
+        while(fast!=null && fast.next!=null)
+        {
+            slow=slow.next;
+            fast=fast.next.next;
+        }
+        slow.next=slow.next.next;
+        return head;
+    }
+}
+
+T.C. -> 0(N/2)
+S.C. -> 0(1)
+
+
+Question 14) Find the starting point of the Loop/Cycle in LinkedList
+
+Brute Force Approach : hashmap mein dalte jao and check have I visited previously , if yes directly return nothing else
+code: public class Solution {
+       public ListNode detectCycle(ListNode head) {
+        HashMap<ListNode,Integer> map = new HashMap<>();
+        ListNode temp = head;
+        while(temp!=null)
+        {
+            if(map.containsKey(temp))
+            {
+                return temp;
+            }
+            map.put(temp,map.getOrDefault(temp,0)+1);
+            temp=temp.next;
+        }
+        return temp;  
+    }
+}
+
+T.C. -> O(N) {map.containsKey() → O(1) average,map.put() → O(1) average}
+S.C. -> O(N)
+
+Optimal Approach : using tortoise and hare algorithm , first step detect karo cycle hai ki nhi , uske baad if cycle then take slow back to head and move slow and fast with 1x , they will definitely collide that point is starting point of loop , for mathematical intution watch video
+code: public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head, fast = head;
+        while(fast!=null && fast.next!=null)
+        {
+            slow=slow.next;
+            fast=fast.next.next;
+            if(fast==slow)
+            {
+                slow=head;
+                while(slow!=fast)
+                {
+                    slow=slow.next;
+                    fast=fast.next;
+                }
+                return slow;
+            }
+        }
+        return null;
+    }
+}
+
+Question 15) Delete all occurrences of a key in DLL
+
+My code:class Solution {
+    static Node deleteAllOccurOfX(Node head, int x) {
+        Node temp = head;
+        while(temp!=null)
+        {
+            if(temp.data==x)
+            {
+                if(temp.next!=null) temp.next.prev=temp.prev;
+                if(temp.prev!=null) temp.prev.next=temp.next;
+                temp.prev=null;
+                temp=temp.next;
+                if(temp!=null && temp.prev==null) head=temp;
+            }
+            else{
+                temp=temp.next;
+            }
+        }
+        return head;
+    }
+}
+
+Striver code: class Solution {
+    static Node deleteAllOccurOfX(Node head, int x) {
+        Node temp = head;
+        while(temp!=null)
+        {
+            if(temp.data==x)
+            {
+                if(temp==head) head=head.next;
+                Node nextnode=temp.next;
+                Node prevnode=temp.prev;
+                if(nextnode!=null) nextnode.prev=prevnode;
+                if(prevnode!=null) prevnode.next=nextnode;
+                temp=nextnode;
+            }
+            else{
+                temp=temp.next;
+            }
+        }
+        return head;
+    }
+}
+
+ye sheet ka question nhi hai : leetcode 82 -> Remove Duplicates from Sorted List II
+
+My brute force approach: 
+code: class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head==null || head.next==null) return head;
+        HashMap<Integer,Integer> map = new HashMap<>();
+        ListNode temp = head,prev=head,curr=head.next;
+        while(temp!=null)
+        {
+            map.put(temp.val,map.getOrDefault(temp.val,0)+1);
+            temp=temp.next;
+        }
+        while(prev!=null)
+        {
+            if(prev==head && map.get(prev.val)>1)
+            {
+                head=head.next;
+                prev.next=null;
+                prev=curr;
+                if(curr!=null) curr=curr.next;
+            }
+            else if(curr!=null && map.get(curr.val)>1)
+            {
+                prev.next=curr.next;
+                curr=prev.next;
+            }
+            else{
+                prev=prev.next;
+                if(curr!=null) curr=curr.next;
+            }
+        }
+        return head;
+    }
+}
+
+Question 16) Find pairs with given sum in doubly linked list
+
+Brute Force Approach : with 2 loops gave TLE
+code: class Solution {
+    public static ArrayList<ArrayList<Integer>> findPairsWithGivenSum(int target,
+                                                                      Node head) {
+        // code here
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+        
+        for(Node temp=head;temp!=null;temp=temp.next)
+        {
+            ArrayList<Integer> pairs = new ArrayList<>();
+            for(Node temp1=temp.next;temp1!=null;temp1=temp1.next)
+            {
+                if(temp.data+temp1.data==target)
+                {
+                    pairs.add(temp.data);
+                    pairs.add(temp1.data);
+                    list.add(pairs);
+                }
+            }
+        }
+        return list;
+    }
+}
+
+Striver brute approach(But my analyzed code) gave also TLE 
+code: class Solution {
+    public static ArrayList<ArrayList<Integer>> findPairsWithGivenSum(int target,
+                                                                      Node head) {
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+        if(head==null || head.next==null) return list;
+        Node curr=head,after=head.next;
+        while(curr!=null)
+        {
+            if(after==null)
+            {
+                curr=curr.next;
+                if(curr!=null) after=curr.next;
+            }
+            else if(curr.data+after.data==target)
+            {
+                ArrayList<Integer> pairs = new ArrayList<>();
+                pairs.add(curr.data);
+                pairs.add(after.data);
+                list.add(pairs);
+                curr=curr.next;
+                after=curr.next;
+            }
+            else if(curr.data+after.data>target)
+            {
+                curr=curr.next;
+                after=curr.next;
+            }
+            else{
+                after=after.next;
+            }
+        }
+        return list;
+    }
+}
+
+Striver code: class Solution {
+    public static ArrayList<ArrayList<Integer>> findPairsWithGivenSum(int target,
+                                                                      Node head) {
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+        if(head==null || head.next==null) return list;
+        Node curr=head,after=head.next;
+        while(curr!=null)
+        {
+            after=curr.next;
+            while(after!=null && curr.data+after.data<=target)
+            {
+                if(curr.data+after.data==target)
+                {
+                    ArrayList<Integer> pairs = new ArrayList<>();
+                    pairs.add(curr.data);
+                    pairs.add(after.data);
+                    list.add(pairs);
+                }
+                after=after.next;
+            }
+            curr=curr.next;
+        }
+        return list;
+    }
+}
+T.C. -> is near about , not exactly O(N^2)
+S.C. -> O(1)
+
+Optimal approach: It is given that DLL is sorted , ek pointer ko tail pe rakhenge aur ek pointer ko head pe, aur jabhi dono ka sum target ke equal hojayega we will take aur left ko aage le jayenge aur right ko piche leke aayenge, aur jab sum less rahega target se tab left ko aage aur sum jab target se jada tab right ko piche leke aao kyuki dll sorted hai , toh aage pair nhi milega
+code: class Solution {
+    public static ArrayList<ArrayList<Integer>> findPairsWithGivenSum(int target,
+                                                                      Node head) {
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+        if(head==null || head.next==null) return list;
+        Node left=head,right=head;
+        while(right.next!=null)
+        {
+            right=right.next;
+        }
+        while(left.data<right.data)
+        {
+            if(left.data+right.data==target)
+            {
+                ArrayList<Integer> pairs = new ArrayList<>();
+                pairs.add(left.data);
+                pairs.add(right.data);
+                list.add(pairs);
+                left=left.next;
+                right=right.prev;
+            }
+            else if(left.data+right.data<target)
+            {
+                left=left.next;
+            }
+            else{
+                right=right.prev;
+            }
+        }
+        return list;
+    }
+}
+
+T.C. -> O(2N)
+S.C. -> I am not using extra space to solve this problem , we are using to store the answer , so O(1)
+
+Question 17) Remove Duplicates from Sorted DLL
+
+My code: class Solution {
+    Node removeDuplicates(Node head) {
+        if(head==null || head.next==null) return head;
+        Node temp=head,temp1=head.next;
+        while(temp!=null)
+        {
+            if(temp1!=null && temp.data==temp1.data)
+            {
+                temp.next=temp1.next;
+                if(temp1.next!=null) temp1.next.prev=temp;
+                temp1=temp.next;
+            }
+            else{
+                temp=temp.next;
+                if(temp1!=null) temp1=temp1.next;
+            }
+        }
+        return head;
+    }
+}
+I used two pinters 
+
+Striver code: class Solution {
+    Node removeDuplicates(Node head) {
+        if(head==null || head.next==null) return head;
+        Node temp=head;
+        while(temp!=null && temp.next!=null)
+        {
+            Node nextnode = temp.next;
+            while(nextnode!=null && nextnode.data==temp.data)
+            {
+                nextnode=nextnode.next;
+            }
+            temp.next=nextnode;
+            if(nextnode!=null) nextnode.prev=temp;
+            temp=temp.next;
+        }
+        return head;
+    }
+}
+
+T.C. -> On naked eye , it will look like two loops so O(N^2) but it's actually O(N)
+S.C. -> O(1)
+
+Question 18) Rotate LinkedList
+My code : class Solution {
+    public ListNode rotate(ListNode newhead)
+    {
+        ListNode temp=newhead;
+        while(temp.next.next!=null)
+        {
+            temp=temp.next;
+        }
+        ListNode lastsecond=temp;
+        ListNode last = lastsecond.next;
+        last.next=newhead;
+        newhead=last;
+        lastsecond.next=null;
+        return newhead;
+    }
+    public ListNode rotateRight(ListNode head, int k) {
+        if(head==null || head.next==null || k==0) return head;
+        ListNode temp = head;
+        int n = 0;
+        while(temp!=null)
+        {
+            n++;
+            temp=temp.next;
+        }
+        int times = k%n;
+        for(int i=0;i<times;i++)
+        {
+            head=rotate(head);
+        }
+        return head;
+    }
+}
+
+T.C. -> O(N^2)
+mera approach bhi sahi hai lekin , striver ne jo logic lagaya , that is awesome because mai baar baar function run karunga for multiple times
+
+Striver logic with code:
+sabse pehle tail pe pahuch ke tail ko head se connect kardo , aur jitna baar rotate karna hai , usse ek kam tak pahuch ke uske next ko head bana do , aur waha se connection tod do warna circular linked list ban jayega
+
+code: class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if(head==null || head.next==null || k==0) return head;
+        ListNode tail = head;
+        int n = 1;
+        while(tail.next!=null)
+        {
+            n++;
+            tail=tail.next;
+        }
+        if(k%n==0) return head;
+        tail.next=head;
+        int rotation = n-(k%n);
+        tail=head;
+        for(int i=1;i<rotation;i++)
+        {
+            tail=tail.next;
+        }
+        head=tail.next;
+        tail.next=null;
+        return head;
+    }
+}
+T.C. -> O(2^N)
+S.C. -> O(1)
+
+Question 19) Merge two sorted LinkedList
+
+Note: Equal case me 2 nodes ek saath jodne se unke old next pointers reh jaate hain, jo cycle bana dete hain — isliye TLE aata hai.
+
+BruteForce: Traverse through both ll and add into array and then sort the array and make ll through array
+
+T.C. -> O(N)+O(N)+O(NlogN)+O(N)--> Two bigoh of N's for adding into array , sorting algorithm, converting from array to linkedlist
+S.C. -> O(N) , an array to store all the elements
+
+Optimal: with the help of dummy node and pointers 
+code: class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        if(list1==null && list2==null) return list1;
+        ListNode Dummy = new ListNode(-1000);
+        ListNode temp1 = list1, temp2 = list2;
+        ListNode traversal = Dummy;
+        while(temp1!=null && temp2!=null)
+        {
+            if(temp1.val<=temp2.val)
+            {
+                traversal.next=temp1;
+                temp1=temp1.next;
+            }
+            else
+            {
+                traversal.next=temp2;
+                temp2=temp2.next;
+            }
+            traversal=traversal.next;
+        }
+        if(temp1!=null)
+        {
+            traversal.next=temp1;
+        }
+        if(temp2!=null)
+        {
+            traversal.next=temp2;
+        }
+        return Dummy.next;
+    }
+}
+
+T.C. -> O(N1+N2)
+S.C. -> O(1)
+
+Question 20) Flattening a Linked List(GfG)
+Is question mein kya karna hai ki jo linked list diya hai usme ek node ka next pointer hai aur bottom pointer hai(aur jo question mein diya hua linked list hai usme nodes ke jo bottom nodes hai woh sorted hai) , toh hume kya karna hai ki ek linked list vertical mein return karna hai 
+
+BruteForce Approach: humne ek ArrayList banaya hai aur ek temp pointer ko, har ek main node pe rakh rahe hai , aur ek aur pointer ko main node pe rakh ke bottom ki taraf traverse kar rahe hai aur ArrayList mein daal rahe hai aur at last after adding all elements , sort the arraylist, uske baad take every element from arraylist and make vertical linkedlist through bottom pointer
+
+code: class Solution {
+    public Node convert(ArrayList<Integer> list)
+    {
+        if(list.size()==0) return null;
+        Node head = new Node(list.get(0));
+        Node temp = head;
+        for(int i =1;i<list.size();i++)
+        {
+            Node newNode = new Node(list.get(i));
+            temp.bottom = newNode;
+            temp = temp.bottom;
+        }
+        return head;
+    }
+    public Node flatten(Node root) {
+        ArrayList<Integer> list = new ArrayList<>();
+        Node temp = root;
+        while(temp!=null)
+        {
+            Node t2 = temp;
+            while(t2!=null)
+            {
+                list.add(t2.data);
+                t2=t2.bottom;
+            }
+            temp = temp.next;
+        }
+        Collections.sort(list);
+        Node head=convert(list);
+        return head;
+    }
+}
+
+T.C. -> O(NcrossM) multiply by 2 + X log X , where X is NcrossM, N is horizontal nodes and M is vertical nodes
+S.C. -> O(NcrossM) multiply by 2 (because first time for storing in ArrayList and second time for creating a new vertical ll)
+
+Optimal Approach: ab isme hum kya karenge ki apne brute  force ko optimize karenge , we will use benefit of vertical nodes which are sorted and then we will not be making new vertical linked list , we will be using same nodes
+Ab isme humne pehle 2 list ke liye merge ke liye logic banaya uske baad humne recursion call kiya aur jab last mein pahuch rahe hai base case pe wapas aate waqt dono head ko merge kar rahe hai aur at last we are getting a single complete vertical LinkedList
+code: class Solution {
+    public Node merge(Node list1,Node list2)
+    {
+        Node dummy = new Node(-1);
+        Node res = dummy;
+        while(list1!=null && list2!=null)
+        {
+            if(list1.data<list2.data)
+            {
+                res.bottom=list1;
+                res=list1;
+                list1=list1.bottom;
+            }
+            else{
+                res.bottom=list2;
+                res=list2;
+                list2=list2.bottom;
+            }
+            res.next=null;
+        }
+        if(list1!=null)
+        {
+            res.bottom=list1;
+        }
+        if(list2!=null)
+        {
+            res.bottom=list2;
+        }
+        return dummy.bottom;
+    }
+    public Node f(Node head)
+    {
+        if(head==null || head.next==null) return head;
+        Node mergedhead = f(head.next);
+        return merge(head,mergedhead);
+    }
+    public Node flatten(Node root) {
+        Node head=f(root);
+        return head;
+    }
+}
+
+T.C. -> N multiply O(2M) = O(2NM)
+S.C. -> O(N)
+
+Question 21) Merge K Sorted Lists
+Brute Force Approach: pehle ek arrayList banayenge aur usme traverse karke dalte jayenge aur uske baad pure kist ko sort kar denge
+aur ek linkedlist bana denge
+
+code: class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists == null || lists.length==0) return null;
+        ArrayList<Integer> list = new ArrayList<>();
+        for(int i=0;i<lists.length;i++)
+        {
+            ListNode temp = lists[i];
+            while(temp!=null)
+            {
+                list.add(temp.val);
+                temp=temp.next;
+            }
+        }
+        Collections.sort(list);
+        if(list.size()==0) return null;
+        ListNode head = new ListNode(list.get(0));
+        ListNode dummy = head;
+        for(int i = 1;i<list.size();i++)
+        {
+            ListNode newNode = new ListNode(list.get(i));
+            dummy.next=newNode;
+            dummy=dummy.next;
+        }
+        dummy.next=null;
+        return head;
+    }
+}
+
+T.C. -> O(NcrossK) + MLogM + M
+S.C. -> O(M) + O(M)
+
+Question 22)Sort List
+Brute Force Approach: hum ek ArrayList banayenge aur usme elements dalenge , uske baad usko sort karke , uske baad ArrayList se traverse karke same ll mein put karte jayenge one by one
+code: class Solution {
+    public ListNode sortList(ListNode head) {
+        ListNode temp = head;
+        ArrayList<Integer> list = new ArrayList<>();
+        while(temp!=null)
+        {
+            list.add(temp.val);
+            temp=temp.next;
+        }
+        temp=head;
+        Collections.sort(list);
+        for(int i=0;i<list.size();i++)
+        {
+            int data = list.get(i);
+            temp.val=data;
+            temp=temp.next;
+        }
+        return head;
+    }
+}
+
+T.C. -> O(N + NlogN + N)
+S.C. -> O(N)
+
+so, interviewer will not be happy with this extra space , that we are using to store , so we get the hint that better than this, we have to do anything on the same linkedlist
+
+Optimal Approach will be using merge sort to solve the problem
+
+Question 23) Design a browser history
+
+code: class ListNode {
+    String url;
+    ListNode back;
+    ListNode next;
+
+    ListNode(String url) {
+        this.url = url;
+        this.back = null;
+        this.next = null;
+    }
+}
+class BrowserHistory {
+    ListNode current = null;
+    public BrowserHistory(String homepage) {
+        current = new ListNode(homepage);
+    }
+    
+    public void visit(String url) {
+        ListNode newNode = new ListNode(url);
+        current.next = newNode;
+        newNode.back = current;
+        current=newNode;
+    }
+    
+    public String back(int steps) {
+        while(steps>0)
+        {
+            if(current.back!=null) current = current.back;
+            else break;
+            steps--;
+        }
+        return current.url;
+    }
+    
+    public String forward(int steps) {
+        while(steps>0)
+        {
+            if(current.next!=null) current = current.next;
+            else break;
+            steps--;
+        }
+        return current.url;
+    }
+}

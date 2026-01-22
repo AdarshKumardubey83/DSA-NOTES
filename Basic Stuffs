@@ -1,0 +1,12 @@
+Integer to String : int num = 123;
+String s = String.valueOf(num);
+String to Integer: int num1=Integer.parseInt(str1);
+
+from String Builder to integer:
+StringBuilder sb = new StringBuilder("123");
+int num = Integer.parseInt(sb.toString());
+
+from Integer to StringBuilder:
+int res = str1+str2;
+StringBuilder rev = new StringBuilder(String.valueOf(res));
+

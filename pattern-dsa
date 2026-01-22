@@ -1,0 +1,33 @@
+toh first pattern : prefsum using hashmap : sabse pehla question array se 
+Longest subarray with sum K (positives) and negatives (iska optimal jo ki positives ke liye better tha)
+uske baad isi pattern pe medium ka sabse last question :Count Subarray sum Equals K 
+in dono question aur same concept ko milake two pointer and sliding window ka ye question 
+
+new pattern of question - Binary Subarray with Sum (Two pointer and Sliding Window)
+
+code:
+class Solution {
+    public int f(int[] arr,int goal)
+    {
+        if(goal<0) return 0; 
+        int l=0,r=0,sum=0,count=0;
+        while(r<arr.length)
+        {
+            sum+=arr[r];
+            while(sum>goal)
+            {
+                sum-=arr[l];
+                l++;
+            }
+            count=count+(r-l+1);
+            r++;
+        }
+        return count;
+    }
+    public int numSubarraysWithSum(int[] nums, int goal) {
+        int a = f(nums,goal);
+        int b = f(nums,goal-1);
+        int ans = a-b;
+        return ans;
+    }
+} 

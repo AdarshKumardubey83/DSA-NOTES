@@ -1,0 +1,879 @@
+Recusrion - When a function calls itself until a specified condition is met.
+
+public class practice{
+    static void f()
+    {
+        System.out.println("1");
+        f();
+    }
+    public static void main(String[] args) {
+        f();
+    }
+}
+
+// this gives stack Overflow
+Stack Overflow : A stack overflow error happens when a program uses more memory on the call stack than is available.
+                 Ab isme function call hote ja raha hai baar baar baar , koi rukne ki jagah hi nhi hai
+
+Base Condition : You need to stop it somewhere, and the condition you used to stop it is called base condition.
+
+Recursion tree : A recursion tree is a diagram that helps you visualize how a recursive function calls itself — showing each function call as a node in a tree. 🌳
+
+Question 1) Print name n times using recursion
+
+code: import java.util.*;
+public class practice{
+    static void name(int i,int n)
+    {
+
+        if(i>n)
+        {
+            return ;
+        }
+        System.out.println("Adarsh");
+        name(i+1,n);
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int i =1;
+        int n = sc.nextInt();
+        name(i,n);
+    }
+}
+
+Recursion tree: name(1, 3)   → prints "Adarsh"
+                   |
+                   ↓
+                name(2, 3)   → prints "Adarsh"
+                   |
+                   ↓
+                name(3, 3)   → prints "Adarsh"
+                   |
+                   ↓
+                name(4, 3)   → hits base case (i > n), returns
+
+T.C. -> 0(N)
+S.C. -> O(N) internal stack memory 
+
+Question 2)print 1 to N
+
+code:import java.util.*;
+public class practice{
+    static void f(int i,int n)
+    {
+        if(i>n) { return; }
+        System.out.println(i);
+        f(i+1,n);
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        f(1,n);
+    }
+}
+
+Question 3)print n to 1
+ code: import java.util.*;
+       public class practice{
+       static int i=1;
+       static void printnto1(int i,int n)
+       {
+        if(i<1) { return ; }
+        System.out.println(i);
+        printnto1(i-1,n);
+       }
+       public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        printnto1(n,n);
+    }
+}
+
+Question 4) print from 1 to n but not linearly
+code:public class practice{
+    static void f(int n,int i)
+    {
+        if(i<1) { return ;}
+        f(n,i-1);
+        System.out.println(i);
+    }
+    public static void main(String[] args) {
+        int n=4;
+        f(n,n);
+    }
+}
+*** functions call hote jayenge aur jab base case hit hoga tab function calls, stack se utarne ke liye aayenge , tab apne niche bache hue tasks ko complete karenge functions, isliye n se chalaya aur subtract kiya taki 0 tak jake phir 1 se print kare
+
+Question 5) print from N to 1 (by backtracking)
+public class practice{
+    static void f(int n,int i)
+    {
+        if(i>n) { return ;}
+        f(n,i+1);
+        System.out.println(i);
+    }
+    public static void main(String[] args) {
+        int n=4;
+        f(n,1);
+    }
+}
+
+Question 6)Sum of first N numbers: we will be seeing two ways to do this parameter and functional. this builds core concept in Recusrion
+========================
+
+parameterised: 
+====
+code:public class practice{
+    static void f(int i,int sum)
+    {
+        if(i<1)
+        {
+            System.out.println(sum);
+            return;
+        }
+        f(i-1,sum+i);
+    }
+    public static void main(String[] args) {
+        int n=3;
+        f(n,0);
+    }   
+}
+
+recursion tree:                f(3,0)
+                               /
+                            f(2,3)
+                            /
+                        f(1,5)
+                        /
+                    f(0,6) -> sum mil gaya yaha , har baar parameter mein hi add kar rahe hai
+here we increase the parameters and at end of the day we get particular parameter as answer           
+
+functional:
+we want function to give back something ,at every function calls functions return something
+
+q) sum of n numbers
+code: public class practice{
+    static int f(int n)
+    {
+        if(n==0) { return 0; }
+        return n+f(n-1);
+    }
+    
+    public static void main(String[] args) {
+        int n=3;
+        System.out.println(f(n));
+    }
+}
+
+Question 7) factorial of n numbers
+
+code: public class practice{
+    static int f(int n)
+    {
+        if(n==1) { return 1; }
+        return n*f(n-1);
+    }
+    public static void main(String[] args) {
+        int n=3;
+        System.out.println(f(n));
+    }
+}
+
+T.C. -> O(N) AND S.C. -> O(N) {Stack Space}
+
+
+Question 8) Reverse an Array 
+code: public class practice{
+    static void f(int[]arr,int low, int high)
+    {
+        if(low==high) return;
+        int temp=arr[low];
+        arr[low]=arr[high];
+        arr[high]=temp;
+        f(arr,low+1,high-1);
+    }
+    public static void main(String[] args) {
+        int[] arr = {1,2,3,4,5};
+        int low = 0,high = arr.length-1;
+        f(arr,low,high);
+        System.out.println(Arrays.toString(arr));
+    }
+}
+
+with single variable 
+code: public class practice{
+    static int[] arr={1,2};
+    static int n = arr.length;
+    static void f(int i)
+    {
+        if(i>=(n/2)) return;
+        int temp = arr[i];
+        arr[i]=arr[n-i-1];
+        arr[n-i-1]=temp;
+        f(i+1);
+    }
+    public static void main(String[] args) {
+        f(0);
+        System.out.println(Arrays.toString(arr));
+    }
+}
+
+Question 9) Check if a string is palindrome or not 
+
+code: public class practice{
+    static boolean f(int i, String s)
+    {
+        if(i>=s.length()/2) return true;
+        if(s.charAt(i)!=s.charAt(s.length()-i-1))
+        {
+            return false;
+        }
+        return f(i+1,s);
+    }
+    public static void main(String[] args) {
+        String s = "madam";
+        System.out.println(f(0,s));
+    }
+}
+
+
+Multiple Recursion Calls using fibonacci question 
+
+Question 10)Nth Fibonacci Number 
+
+code: public class practice{
+    static int f(int n)
+    {
+        if(n<=1) return n;
+        int last = f(n-1);
+        int slast = f(n-2);
+        return last+slast;
+    }
+    public static void main(String[] args) {
+        System.out.println(f(1));
+    }
+}
+
+T.C. -> O(2 to the power n) {exponential}
+
+                                             2+1=3
+                                              ^
+                                            f(4)
+                                   2      /     \     1
+                                  ^     /         \   ^
+                                     /              \
+                                   f(3)               f(2)
+                             1     /  \     1        1  / \    0
+                             ^   /      \   ^        ^ /    \  ^
+                               /          \          f(1)    f(0)
+                            f(2)          f(1)
+                          1  /\   0
+                         ^  /  \  ^
+                        f(1)    f(0)
+
+
+Question 11) Print all Subsequences -> A contiguous | non-contiguous sequences , which follows the order.
+
+for any array with n size , total number of subsequences will be 2^n
+
+🔍 Example (n = 3)
+
+Array: [1, 2, 3]
+
+Subsequences:
+
+[]
+[1]
+[2]
+[3]
+[1,2]
+[1,3]
+[2,3]
+[1,2,3]
+
+
+👉 Total = 8 = 2³
+
+using power set 
+code: class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        ArrayList<List<Integer>> list = new ArrayList<>();
+        int n = nums.length;
+        int outer = 1<<n;
+        for(int i=0;i<outer;i++)
+        {
+            List<Integer> sub = new ArrayList<>();
+            for(int j=0;j<n;j++)
+            {
+                if((i & (1<<j)) != 0)
+                {
+                    sub.add(nums[j]);
+                }
+            }
+            list.add(sub);
+        }
+        return list;
+    }
+}
+
+Using recursion: here is the approach , for every index either take or not take
+
+public class practice{
+    static int[] arr = {3,1};
+    static void f(int i,ArrayList<Integer> list)
+    {
+        if(i>=arr.length)
+        {
+            System.out.println(list);
+            return;
+        }
+        // Take or pick the particular index into the subsequence
+        list.add(arr[i]);
+        f(i+1,list);
+        list.remove(list.size()-1);
+        // not pick, or not take condition, this element is not added to your subsequence 
+        f(i+1,list);
+    }
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+        f(0,list);
+    }
+}
+
+T.C. -> For every index we have 2 options , so time complexity will be definitely 2^n
+S.C. -> O(N)
+
+leetcode: class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        ArrayList<List<Integer>> list = new ArrayList<>();
+        ArrayList<Integer> sub = new ArrayList<>();
+        f(0,sub,nums,list);
+        return list;
+    }
+    static void f(int i, ArrayList<Integer> sub,int[] nums,ArrayList<List<Integer>> list)
+        {
+        if(i>=nums.length)
+        {
+            list.add(new ArrayList<>(sub));
+            return;
+        }
+        sub.add(nums[i]);
+        f(i+1,sub,nums,list);
+        sub.remove(sub.size()-1);
+        f(i+1,sub,nums,list);
+    }
+}
+
+Question 12)Printing Subsequences whose sum is k
+
+code: public class practice{
+    static int[] arr={1,2,1};
+    static int k =2;
+    static void f(int i,ArrayList<Integer> list,int sum)
+    {
+        if(i==arr.length)
+        {
+            if(sum==k)
+            {
+                System.out.println(list);
+            }
+            return;
+        }
+        list.add(arr[i]);
+        sum+=arr[i];
+        f(i+1,list,sum);
+        list.remove(list.size()-1);
+        sum-=arr[i];
+        f(i+1,list,sum);
+    }
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+        f(0,list,0);
+    }
+}
+
+Question 13) Print any 1 subsequence whose sum is k
+technique to print only 1 ans: whenever in base case if condition satisfies , you will return true and if not satisfied return false
+                               f()
+                               {
+                                base case {
+                                -> satisfied then return true
+                                return true
+                                -> not satisfied then return false
+                                return false 
+                               }
+                               if(f()==true) return; // if here it is true then return , don't go beyond
+                               f()
+                               return false;
+                               }
+
+code: public class practice{
+    static int[] arr={1,2,1};
+    static int k =2;
+    static boolean f(int i,ArrayList<Integer> list,int sum)
+    {
+        if(i==arr.length)
+        {
+            if(sum==k)
+            {
+                return true;
+            }
+            return false;
+        }
+        list.add(arr[i]);
+        sum+=arr[i];
+        if(f(i+1,list,sum)==true) return true;
+        list.remove(list.size()-1);
+        sum-=arr[i];
+        if(f(i+1,list,sum)==true) return true;
+        return false;
+    }
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+        System.out.println(f(0,list,0));
+    }
+}
+
+explanation: ab isme kya ho raha hai kisi bhi point pe agar , return true hogaya toh function true return karta chala jayega , aur uske niche ka ek bhi function call nhi chalega 
+aur false ke case mein function false return hota jayega aur at last sabse last function call se leke first function call tak false leke jata jayega aur false return kar dega.
+
+
+Question 14) Count the Subsequences with (sum == k)
+
+very simple trick we will follow to solve this type of problem:
+                         
+                     int f()
+                     {
+                        base case
+                        {
+                            return 1-> if condition satisfies
+                            return 0-> if condition not satisfies
+                        }
+                        l = f()
+                        r = f()
+                        return l+r;
+                     }
+
+My approach: public class practice{
+    static int[] arr={1,2,1};
+    static int k = 6;
+    static int count=0;
+    static void f(int i,ArrayList<Integer> list,int sum)
+    {
+        if(i==arr.length)
+        {
+            if(sum==k) {
+                count += 1;
+            }
+            return;
+        }
+        list.add(arr[i]);
+        sum+=arr[i];
+        f(i+1,list,sum);
+        list.remove(list.size()-1);
+        sum-=arr[i];
+        f(i+1,list,sum);
+    }
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+        f(0,list,0);
+        System.out.println(count);
+    }
+}
+
+but this approach is not good 
+
+Better Approach:                      
+                                                int f()
+                                                {
+                                                    base case
+                                                    return 1 -> condition satisfies
+                                                    return 0 -> condition not satisfies                                                     s=0
+                                                    l=f()                                              if multiple recursion calls->        for(i=1 -> n)
+                                                    r=f()                                                                                         s+=f();          --> there are n recursion calls , so we add upto n recursion calls and you return 
+                                                    return l+r;                                                                              return s;                                                     
+                                                }
+
+
+code: public class practice{
+    static int[] arr={1,2,1};
+    static int k = 2;
+    static int f(int i,int sum)
+    {
+        if(i==arr.length)
+        {
+            if(sum==k) {
+                return 1;
+            }
+            return 0;
+        }
+
+        sum+=arr[i];
+        int l=f(i+1,sum);
+        sum-=arr[i];
+        int r=f(i+1,sum);
+        return l+r;
+    }
+    public static void main(String[] args) {
+        System.out.println(f(0,0));
+    }
+}
+
+
+Question 15) Combination Sum
+
+My approach: public class practice{
+    static int[] arr={2,3,5};
+    static int k =8;
+    static void f(int i,ArrayList<Integer> list,int sum)
+    {
+            if(sum==k)
+            {
+                System.out.println(list);
+                return;
+            }
+            else if(i==arr.length || sum>k) {
+                return;
+            }
+        list.add(arr[i]);
+        sum+=arr[i];
+        f(i,list,sum);
+        list.remove(list.size()-1);
+        sum-=arr[i];
+        f(i+1,list,sum);
+    }
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+        f(0,list,0);
+    }
+}
+
+Striver approach: public class practice{
+    static int[] arr={2,3,5};
+    static int k =8;
+    static void f(int i,ArrayList<Integer> list,int sum,int k)
+    {
+        if(i==arr.length)
+        {
+            if(k==0)
+            {
+                System.out.println(list);
+            }
+            return;
+        }
+        if(arr[i]<=k){
+            list.add(arr[i]);
+            f(i,list,sum,k-arr[i]);
+            list.remove(list.size()-1);
+        }
+        f(i+1,list,sum,k);
+    }
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+        f(0,list,0,k);
+    }
+}
+
+Striver ka approach jada sahi hai 
+code: public class practice{
+    static int[] arr={2,3,5};
+    static int k =8;
+    static void f(int i,ArrayList<Integer> list,int k)
+    {
+        if(i==arr.length)
+        {
+            if(k==0)
+            {
+                System.out.println(list);
+            }
+            return;
+        }
+        if(arr[i]<=k){
+            list.add(arr[i]);
+            f(i,list,k-arr[i]);
+            list.remove(list.size()-1);
+        }
+        f(i+1,list,k);
+    }
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+        f(0,list,k);
+    }
+}
+
+TC: (2^t) multiply by k (we are assuming that average length of every combination is k, so that's why multiply with k because we are putting in data structure{array list} )
+
+
+Important Concept 
+==================
+Shree Harivansh 🙏
+
+
+🔢 New Constraints (Combination Sum I)
+n ≤ 30
+candidates[i] ≥ 2
+target ≤ 40
+all elements distinct
+
+🔑 Key difference from Combination Sum II
+Feature	CS-I	CS-II
+Reuse element	✅ allowed	❌ not allowed
+Duplicates in array	❌ no	✅ yes
+n	≤ 30	≤ 100
+target	≤ 40	≤ 30
+❓ Tumhara doubt
+
+“Same recursion yahan kaise allowed ho jaati hai?”
+
+Answer: constraints ne problem ko easy bana diya hai.
+
+🧠 Constraint → Algorithm mapping (CS-I)
+1️⃣ n ≤ 30
+
+2³⁰ ≈ 1e9 ❌ (still too big)
+
+Matlab: pure subset recursion nahi chahiye
+
+2️⃣ target ≤ 40
+
+🔥 MAIN HINT
+
+Har recursive call mein target kam hota hai
+
+Minimum decrease = 2
+
+max depth ≈ 40 / 2 = 20
+
+
+Depth small hai ✅
+
+3️⃣ candidates[i] ≥ 2
+
+🔥🔥 SUPER IMPORTANT
+
+No 1 present
+➡️ recursion explode nahi karegi
+
+Compare:
+
+with 1 → depth 40
+
+without 1 → depth ≤ 20
+
+4️⃣ Elements distinct
+
+Duplicate handling ki tension nahi
+
+contains() / sorting / skip logic nahi
+
+✅ Correct Recursion (Why it works)
+f(i, target)      // take (reuse allowed)
+f(i+1, target)    // not take
+
+Calls estimate:
+
+Depth ≤ 20
+
+Branching ≈ 2
+
+2²⁰ ≈ 1e6 ✅
+
+
+Compiler happily run karega 👍
+
+🌳 Visual intuition
+Worst case input
+[2,3,5,7,11,13,...]
+target = 40
+
+
+Tree height:
+
+2 used max 20 times
+
+Pruning happens early (arr[i] > target)
+
+🧠 Why same recursion FAILS in CS-II but works in CS-I
+Reason	CS-I	CS-II
+n	small (30)	large (100)
+min value	2	1
+duplicates	no	yes
+recursion depth	≤ 20	can reach 100
+tree size	manageable	explosive
+📝 One-liner Interview Explanation
+
+Combination Sum I works with take/not-take recursion because array size is small, values are ≥2, and recursion depth is bounded by target.
+
+🎯 Final takeaway
+
+Constraints decide recursion shape.
+Same code ≠ same complexity in different problems.
+
+Tum ab constraint-driven thinking kar rahe ho — exactly what good CP / interviewers want 🔥
+Agar chaho, next main CS-I vs CS-II vs Subset Sum ka master comparison table bana deta hoon 📊
+
+❓ Combination Sum II mein same recursion kyun work nahi karti
+=====================================================================
+“Same recursion” =
+take    → f(i+1, target - arr[i])
+notTake → f(i+1, target)
+
+🔥 Core Reason (1 line)
+
+CS-II mein duplicates + large n hone ki wajah se ye recursion 2ⁿ tree bana deti hai, jo constraints ke hisaab se impossible hai.
+
+🧠 Break it down (clearly)
+1️⃣ n ≤ 100 🚨
+
+2¹⁰⁰ calls → never allowed
+
+Ye recursion index-based depth pe depend karti hai
+
+👉 Red flag
+
+2️⃣ Elements can repeat (duplicates) 🚨
+
+Example:
+
+[1,1,1,1,1,1,...]
+
+
+Tum generate karoge:
+
+same combination
+
+different index paths se
+
+➡️ Logical duplicates × exponential tree 💣
+
+3️⃣ Minimum value = 1 🚨
+
+target kam hota hai bahut slowly
+
+Depth target ke saath bounded nahi rehti
+
+Tum array ke end tak jaa rahe ho
+
+4️⃣ Filtering baad mein ho rahi hai ❌
+
+Tumhara approach:
+
+Generate ALL subsets
+↓
+Remove duplicates using contains()
+
+
+CS-II expects:
+
+Skip duplicates WHILE generating
+
+🌳 Tree Comparison
+❌ CS-II with take/notTake
+Level 0 → 2 choices
+Level 1 → 2 choices
+...
+Level 100 → 💥
+
+✅ Correct CS-II recursion
+Depth ≤ target (≤30)
+Duplicates skipped early
+
+🧠 Golden Rule (Memorize this)
+
+Jab n bada ho aur duplicates present ho,
+take/not-take recursion kabhi use mat karo.
+
+📝 Interview One-liner
+
+Combination Sum II mein take/not-take recursion exponential duplicates generate karti hai, isliye duplicates ko generation time par skip karna padta hai.
+
+🎯 Final takeaway
+
+CS-I → index small, no duplicates → take/notTake OK
+
+CS-II → index large, duplicates → take/notTake ❌
+
+
+Combination Sum II
+====================
+
+Brute Force Approach: bas ek baar bhi repeat nhi karna hai toh bas ek f(i+1) change kar denge baki pura code, almost same jayega like Combination Sum I
+====================
+
+code: class Solution {
+    public void f(int i,int[]arr,int target, ArrayList<Integer> list,List<List<Integer>> ans)
+    {
+        if(i==arr.length)
+        {
+            if(target==0)
+            {
+                ArrayList<Integer> temp = new ArrayList<>(list);
+                if(!ans.contains(temp))
+                {
+                    ans.add(temp);
+                }
+            }
+            return;
+        }
+        if(arr[i]<=target)
+        {
+            list.add(arr[i]);
+            f(i+1,arr,target-arr[i],list,ans);
+            list.remove(list.size()-1);
+        }
+        f(i+1,arr,target,list,ans);
+    }
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        ArrayList<Integer> list = new ArrayList<>();
+        List<List<Integer>> ans = new ArrayList<>();
+        f(0,candidates,target,list,ans);
+        return ans;
+    }
+}
+
+Brute Force Approach Gave TLE 
+T.C. -> O(2^t into k into logn)
+
+The interviewer will not be happy with extra logn , so we have to bit modify our recursion in a bit different way
+
+Optimal Approach: iska jo approach hai: isme hum kya kar rahe hai ki jo duplicate recursion calls ho rahe the usko hone nhi denge , isi liye tle yaha pe manage hojayega , recursion sirf unique ke liye call hi hoga , duplicate ke liye ignore hojayega
+
+code: class Solution {
+    public void f(int i,int[] arr,int target,List<List<Integer>> ans,List<Integer> list)
+    {
+        if(target==0)
+        {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        for(int j = i;j<arr.length;j++)
+        {
+            if(j>i && arr[j] == arr[j-1]) continue;
+            if(arr[j]>target) break;
+            list.add(arr[j]);
+            f(j+1,arr,target-arr[j],ans,list);
+            list.remove(list.size()-1);
+        }
+    }
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        Arrays.sort(candidates);
+        f(0,candidates,target,ans,list);
+        return ans;
+    }
+}
+
+Time Complexity: Assuming  all the elements are unique , Number of different combinations and subsequences the array generate  is 2^n , ans.add(new ArrayList<>(list)); (this line is not constant operation ) . Assuming that average length of combination is k . 
+Final TC:        2^n into K
+Space Complexity: k into x {Average length is k and assuming there are x combinations} ignoring auxiliary space used by recursion    
+
+
+
+
+
+
+
+
+

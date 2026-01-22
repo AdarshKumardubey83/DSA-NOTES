@@ -1,0 +1,4 @@
+1) Singly linked list 
+problem 1-> Add Two Numbers 
+isme humne DummyNode ka help liya hai , aur two pointer rakh ke dono ll pe, aur ek cy(carry variable) liya hai , jo check karega humesha har point pe ki kab carry jayega aur kab nhi 
+

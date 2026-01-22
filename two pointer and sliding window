@@ -1,0 +1,775 @@
+Two Pointers and Sliding Window
+==================================
+isme 4 tarike ka question hota hai jo ki notes mein hai copy mein aur
+
+1.Constand Window : isme window ka length diya hota hai , uske hisab se kuch condition hoti hai aur utne hi length ke liye nikalna hota hai by doing shrink and expand, by keeping window constant
+
+2.Longest Subarray/Substring where <some condition>
+      brute: 2 loop se 
+      better: 2 while
+      optimal : 1 while aur if statement(why to shrink window again and again , if I am looking for bigger window)
+
+3. No. of subarrays where <condition> yaha pe jo condition hota hai woh accurate hita hai =(equal to) 
+   
+
+4. Sliding/Minimum Window <Condition>
+
+1.Maximum Points You Can Obtain from Cards: is question mein ya toh bhai left se consecutive ja sakte hai nhi toh sirf right se ja sakte hai toh jitna possible case hai utna dekh lo, ek baar sirf left se lelo, aur ek baar left se loop lete hue taki right ko bhi lena hai manage karke sum mein minus bhi karna hoga jo bhi chodenge left se max sum nikal dena hai :
+
+Code:
+class Solution {
+    public int maxScore(int[] cardPoints, int k) {
+        int lsum=0,rsum=0,maxSum=0,n=cardPoints.length;
+        for(int i=0;i<k;i++)
+        {
+            lsum=lsum+cardPoints[i];
+            maxSum=lsum;
+        }
+        int rindex=n-1;
+        for(int i=k-1;i>=0;i--)
+        {
+            lsum=lsum-cardPoints[i];
+            rsum=rsum+cardPoints[rindex];
+            rindex=rindex-1;
+            maxSum=Math.max(maxSum,lsum+rsum);
+        }
+        return maxSum;
+    }
+}
+
+✅Total Time Complexity: O(2*k) both loop is running for k times
+✅Space Complexity: O(1)
+
+2.Longest substring without repeating characters: isme th mereko yah nhi samjh aa raha tha ki duplicate ko kaise handle karu pointers ke saath, isme main yahi tha ki jaise hi woh letter wapas aajayega phir usko nhi dekhna hai.
+uske aage badh ke dekhna hai kyuki same letter aagaya toh ab ye unique substring nhi hosakta hai .
+
+Brute Force approach:humne ek array use kr liya hai 256 size ka jismein hum dekh rahe hai ki kaun aaya hai aur kaun nhi aaya hai , aur har baar naya banta hai i ke liye (array)
+
+Code:class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n=s.length(),maxlen=0;
+        for(int i=0;i<n;i++)
+        {
+            int arr[] = new int[256];
+            for(int j=i;j<n;j++)
+            {
+                if(arr[s.charAt(j)] == 1) { break; }
+                int len=j-i+1;
+                maxlen=Math.max(maxlen,len);
+                arr[s.charAt(j)]=1;
+            }
+        }return maxlen;
+    }
+}
+
+TC-O(n2)
+SC-O(256)
+
+Optimal Approach:isme pure steps yaad rakhna hai ki hashmap  liye , uske baad agar koi duplicate milta hai toh usko tabhi l ko aage badhana hai agar woh Pehle se map mein hai aur jo duplicate mila hai uska index bada ho abhi ke se, tabhi aage badhne ka faida hai warna agar us bande ke aage nhi badhe toh kl ko phir mil jayega wahi same duplicate, aur aage badhne ke baad jo naya index mile usko bhi map mein daal do, aur baki toh koi naya hai then go inside map and 
+isme hashmap mein char, index because last time jaha pe ye character dikha tha agar uske aage nhi gaya mai toh woh character wapas aaajayega that's the problem(revise karte time count leke mai kar raha tha aur window maintain nhi kar paya kyuki woh alphabet wapas aagaya)
+bas isme character aur index pe khelna hai
+>=L is liye kiye hai taki , jo character hai woh window ke andar hi rahe jaise for example : cadbzabcd isme jab L -> z pe hoga aur r -> c pe tab c,0(inside map) tab c>=L hi verify kar raha hai ki jo particular character hai , agar woh window ke andar hai tabhi hum l ko aage badhayenge(jaise ki c pehle se hai map pe lekin window mein nhi hai toh verufy hojayega through condition map.get(ch)>=L) , otherwise window harsh hojayegi 
+code:class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int l = 0, maxlen = 0;
+
+        for (int r = 0; r < s.length(); r++) {
+            char ch = s.charAt(r);
+            if (map.containsKey(ch) && map.get(ch) >= L) {
+                l = map.get(ch) + 1;
+            }
+            map.put(ch, r);
+            maxlen = Math.max(maxlen, r - l + 1);
+        }
+
+        return maxlen;
+    }
+}
+
+
+3.1004. Max Consecutive Ones III
+
+Brute:
+
+
+
+
+better:mai ye nhi soch pa raha tha ki kab window ko shrink karna hai , isme pura khel k ka hai jaise hi (zeroes count karte raho) jaise hi k ke aage gaya bas loop ke anda ab l ko aage badhao
+       aur jaise hi k ke equal ho ya k se chota ho toh window ka length nikalo aur expand toh har case mein hoga
+
+code:class Solution {
+    public int longestOnes(int[] nums, int k) {
+        int l=0,r=0,zeroes=0,maxlen=0;
+        while(r<nums.length)
+        {
+            if(nums[r]==0) { zeroes++; }
+            while(zeroes>k)
+            {
+                if(nums[l]==0) { 
+                    zeroes--;
+                }
+                l++;
+            }
+            if(zeroes<=k)
+            {
+                int len=r-l+1;
+                maxlen=Math.max(len,maxlen);
+            }
+            r++;
+        }
+        return maxlen;
+    }
+}
+
+Time Complexity: Outside loop : O(N) and for inside loop imagine a worst scenario:
+                                                         [1,1,1,1,1,1,0,0] for this k=1 and zeroes = 2 now l will move into whole array means O(n)
+so totalTC: O(N)+O(N)=O(2N)
+SC: O(N)
+
+
+Optimal: isme hum aone window ko galat hi maan le rahe hai , jaise ki better mein hum pehle pure window ko sahi karte the lekin isme na sahi kar rahe hai na hi galat window ke liye maxlen nikal rahe hai
+kyuki aage jake window sahi karne ka jada faida nhi hai , toh isme kayi baar ye faida hojata hai ki r pure array se hi bahar nikal jata hai aur max len bhi mil jata hai  
+
+
+code:class Solution {
+    public int longestOnes(int[] nums, int k) {
+        int l=0,r=0,zeroes=0,maxlen=0;
+        while(r<nums.length)
+        {
+            if(nums[r]==0) { zeroes++; }
+            if(zeroes>k)
+            {
+                if(nums[l]==0) { 
+                    zeroes--;
+                }
+                l++;
+            }
+            if(zeroes<=k)
+            {
+                int len=r-l+1;
+                maxlen=Math.max(len,maxlen);
+            }
+            r++;
+        }
+        return maxlen;
+    }
+}
+
+4.904. Fruit Into Baskets
+
+brute force: isme hashset har baar naya ban raha hai toh jabhi 2 se bahar ho raha hai hum us window ko hi chod de rahe hai
+
+code:class Solution {
+    public int totalFruit(int[] fruits) {
+        int maxlen=0;
+        for(int i=0;i<fruits.length;i++)
+        {
+            HashSet<Integer> set=new HashSet<>();
+            for(int j=i;j<fruits.length;j++)
+            {
+                set.add(fruits[j]);
+                if(set.size()<=2)
+                {
+                    maxlen=Math.max(maxlen,j-i+1);
+                }
+                else{
+                    break;
+                }
+            }
+        }
+        return maxlen;
+    }
+}
+
+it will give tle because T.C. -> O(N2) 
+S.C. -> O(3) = O(1)
+
+
+better approach: map mein dalte jao aur element ka count badhate jao aur jab 2 basket se upar chala jaye tab tak loop mein fasake rakhna hai
+aur jaise hi us element ka count 0 hojaye usko bahar nikal do map ss
+
+code:class Solution {
+    public int totalFruit(int[] fruits) {
+        int l = 0, r = 0, n = fruits.length, maxlen = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        while (r < n) {
+            map.put(fruits[r], map.getOrDefault(fruits[r], 0) + 1);
+            while (map.size() > 2) {
+                map.put(fruits[l], map.get(fruits[l]) - 1);
+                if (map.get(fruits[l]) == 0) {
+                    map.remove(fruits[l]);
+                }
+                l++;
+            }
+            if(map.size()<=k) {maxlen = Math.max(maxlen, r - l + 1)};
+            r++;
+        }
+
+        return maxlen;
+    }
+}
+
+T.C. -> 0(N) + O(N)(AT WORST) => O(2N)
+S.C. -> O(3) ALMOST CONSTANT KYUKI ISSE BADA MAP HOGA HI NHI
+
+
+5.gfg ->Longest Substring with K Uniques : ye maine brute lagaya hai aur tle de diya 
+
+class Solution {
+    public int longestKSubstr(String s, int k) {
+        // code here
+        int maxlen=0;
+        boolean check=false;
+        for(int i=0;i<s.length();i++)
+        {
+            HashSet<Character> set=new HashSet<>();
+            for(int j=i;j<s.length();j++)
+            {
+                set.add(s.charAt(j));
+                if(set.size()>k)
+                {
+                    break;
+                }
+                else if(set.size()==k)
+                {
+                    check=true;
+                    maxlen=Math.max(maxlen,j-i+1);
+                }
+            }
+        }
+        if(check==false)
+        {
+            return -1;
+        }
+        return maxlen;
+    }
+}
+
+lekin striver ka brute ka logic bhi alag hai : woh map le raha hai aur map mein dala aur jaise hi k se geater hoga break kardo 
+phir se naya map banega phir value dalegi TC-> O(N2) , S.C. -> O(256)
+
+better: l ko hum tab aage bhej rahe hai jab tab uska frequency map mein hai aur jaise hi uska count 0 hojayega woh map se remove hojayega
+
+code:class Solution {
+    public int longestKSubstr(String s, int k) {
+        // code here
+        int l=0,r=0,maxlen=-1;
+        HashMap<Character,Integer> map=new HashMap<>();
+        while(r<s.length())
+        {
+            map.put(s.charAt(r), map.getOrDefault(s.charAt(r),0)+1);
+            while (map.size() > k) {
+                char ch = s.charAt(l); 
+                map.put(ch, map.get(ch) - 1);
+                if (map.get(ch) == 0) {
+                    map.remove(ch); 
+                }
+                l++;
+            }
+            if(map.size()==k){
+                maxlen=Math.max(maxlen,r-l+1);
+            }
+            r++;
+        }
+        return maxlen;
+    }
+}
+
+T.C. -> O(N)+O(N){at worst}+ O(log 256)
+S.C. -> O(256)
+
+Optimal: same code of better why again trim window size to smalll, suppose window size is 5 , in case of while we again trimdown it, why just keep na 5 , there is no use go to 3 and again come to 5
+we want maxlen, so keep that window and don't update maxlen(condition rehna chahaiye waha).
+
+code:
+
+class Solution {
+    public int longestKSubstr(String s, int k) {
+        // code here
+        int l=0,r=0,maxlen=-1;
+        HashMap<Character,Integer> map=new HashMap<>();
+        while(r<s.length())
+        {
+            map.put(s.charAt(r), map.getOrDefault(s.charAt(r),0)+1);
+             if (map.size() > k) {
+                char ch = s.charAt(l); 
+                map.put(ch, map.get(ch) - 1);
+                if (map.get(ch) == 0) {
+                    map.remove(ch); 
+                }
+                l++;
+            }
+            if(map.size()==k){
+                maxlen=Math.max(maxlen,r-l+1);
+            }
+            r++;
+        }
+        return maxlen;
+    }
+}
+
+
+T.C. -> O(N)+ O(log 256)
+S.C. -> O(256)
+
+(6)Number of Substrings Containing All Three Characters: Is question mein karna ye hai ki saare substring nikalne hai aur condition ye hai ki kamsekam us substring mein 3 characters-> a,b,c hona chahiye , usse jada bhi hoga toh koi dikkat nhi hai 
+
+my brute force: using hashmap
+
+class Solution {
+    public int numberOfSubstrings(String s) {
+        int count=0;
+        for(int i=0;i<s.length();i++)
+        {
+            HashMap<Character,Integer> map = new HashMap<>();
+            for(int j=i;j<s.length();j++)
+            {
+                map.put(s.charAt(j),map.getOrDefault(s.charAt(j),0)+1);
+                if(map.size()==3 && map.get('a')>=1 && map.get('b')>=1 && map.get('c')>=1)
+                {
+                    count+=1;
+                }
+            }
+        }
+        return count;
+    }
+}
+
+but striver brute force:
+class Solution{
+    public int numberOfSubstrings(String s) {
+        int  count=0;
+        int[] arr={0,0,0}
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                arr[s.charAt(i)-'a']=1;
+                if(arr[0]+arr[1]+arr[2]==3)
+                {
+                    count+=1;
+                }
+            }
+        }
+        return count;
+    }
+}
+T.C.-> O(N2)
+S.C.-> O(1)
+
+//jaise hi sabse chota substring mil jayega uske baad har ek substring valid hoga kyuki abc (bas inta chahaiye) ab iske saath aur kuch bhi aayega sab valid hoga 
+slight optimization for certain test cases  -> toh jaise hi mil jaye uske baad ka length se substract karke break , phir next i ke liye dhundiye
+
+code for slight optimization for certain test cases:
+
+class Solution{
+    public int numberOfSubstrings(String s) {
+        int  count=0;
+        int[] arr={0,0,0}
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                arr[s.charAt(i)-'a']=1;
+                if(arr[0]+arr[1]+arr[2]==3)
+                {
+                    count=count+(n-j); // jaise hi mil raha hai uske baad aage ke liye check nhi kar rahe hai, just add aage wala aur break
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+}
+
+it will improve time complexity for certain test cases , not in worst like input: aaaaaaa(is case mein pura hi traverse hoga kyuki abc milega hi nhi)
+
+Now i want to go to n2 to n-> toh isme expand aur shrink nhi lagana hai , longest thodi chahaiye, we just need number of Substrings
+
+//with every character there is a substring that ends. sabse pehle sabse minimum window find karna hai , aur sabka index rakhna hai array mein , aur ek baar jab minimum window mil gaya toh uske piche wala bhi hoga substring aur woh khud bhi toh 1+Math.min(index in across 3), yahi logic hai optimal approach ka
+
+Optimal:
+striver solution->
+class Solution {
+    public int numberOfSubstrings(String s) {
+        int count=0;
+        int[] lastseen={-1,-1,-1};
+        for(int i=0;i<s.length();i++)
+        {
+            lastseen[s.charAt(i)-'a']=i;
+            if(lastseen[0]!=-1 && lastseen[1]!=-1 && lastseen[2]!=-1)
+            {
+                count += 1 + Math.min(lastseen[0], Math.min(lastseen[1], lastseen[2]));
+            }
+        }
+        return count;
+    }
+}
+
+T.C. -> 0(N) just one pass all substrings in my hand
+S.C. -> o(1)
+
+
+(7) Longest Repeating Character Replacement 
+
+brute Force-> iska logic ye hai ki ek array[26] size ka lenge usme sabka frequency store karenge aur jiska bhi maximum frequency hoga usko len se minus karenge
+matlab ki max frequency hai mere pass toh pure string mein uske alawa jo bhi character hoga usko Max frequency hi banana hai toh jo changes hue woh length hai 
+jaise ki AAAABB isme max freq A hai toh B ko bhi A banana hoga toh subtract karke length se nikal lenge ki kitna changes humara
+
+code brute force:class Solution {
+    public int characterReplacement(String s, int k) {
+        int maxlen=0, maxf=0;
+        for(int i=0;i<s.length();i++)
+        {
+            int[] hash= new int[26];
+            for(int j=i;j<s.length();j++)
+            {
+                hash[s.charAt(j)-'A']++;
+                maxf=Math.max(maxf,hash[s.charAt(j)-'A']);
+                int changes=(j-i+1)-maxf;
+                if(changes<=k)
+                {
+                    maxlen=Math.max(maxlen,j-i+1);
+                }
+                else{
+                    break;
+                }
+            }
+        }
+        return maxlen;
+    }
+}
+
+T.C. -> O(N2)
+S.C. -> O(26) {size of array} 
+
+my better code:class Solution {
+    public int characterReplacement(String s, int k) {
+        int l=0,r=0,maxlen=0,maxf=0,changes=0;
+        int[] hash=new int[26];
+        while(r<s.length())
+        {
+            hash[s.charAt(r)-'A']++;
+            maxf=Math.max(maxf,hash[s.charAt(r)-'A']);
+            changes=(r-l+1)-maxf;
+            while(changes>k)
+            {
+                hash[s.charAt(l)-'A']--;
+                l++;
+                changes=(r-l+1)-maxf;
+            }
+            if(changes<=k) { maxlen=Math.max(maxlen,r-l+1); }
+            r++;
+        }
+        return maxlen;
+    }
+}
+
+// ye bhi sahi hai lekin isko dekhne ke jagah striver ka step by step dekhenge toh jada clarity hogi
+
+Striver better:class Solution {
+    public int characterReplacement(String s, int k) {
+        int l=0,r=0,maxlen=0,maxf=0,changes=0;
+        int[] hash=new int[26];
+        while(r<s.length())
+        {
+            hash[s.charAt(r)-'A']++;
+            maxf=Math.max(maxf,hash[s.charAt(r)-'A']);
+            changes=(r-l+1)-maxf;
+            while(changes>k)
+            {
+                hash[s.charAt(l)-'A']--;
+                maxf=0;
+                for(int i=0;i<25;i++)  { maxf=Math.max(maxf,hash[i]); }
+                l=l+1;
+                changes=(r-l+1)-maxf;
+            }
+            if(changes<=k) { maxlen=Math.max(maxlen,r-l+1); }
+            r++;
+        }
+        return maxlen;
+    }
+}
+
+//isme hum haar bar pure array mein traverse karke maxf ko update kar rahe hai jab window shrink ho rahi hai tab
+
+T.C.-> [O(N) +O(N) {AT WORST}] multiply by O(26) assuming that every time you are going inside and traversing through the array
+S.C.-> O(26)
+
+Now Optimize better: ab yaha pe jo maxf ko update kar rahe hai woh nhi karenge kyuki maxf agar chota hojayega toh faida nhi hai , I have maxlen toh usse upar jana hai usse niche nhi jana hai baar baar isliye keep maxf don't decrease by updating, toh O(26) hat gaya
+Ab ek while loop hatayenge because we are looking to go O(2n) to O(N) 
+toh while loop kya karta hai jab window invalid hojata hai toh usko shrink karta hai but why i have to shrink, i have maxlen, i have to go above that , don't shrink just keep that, so instead of removing 2 times l or 3 times l , i will just go for 1 time
+
+Most Optimal:class Solution {
+    public int characterReplacement(String s, int k) {
+        int l=0,r=0,maxlen=0,maxf=0,changes=0;
+        int[] hash=new int[26];
+        while(r<s.length())
+        {
+            hash[s.charAt(r)-'A']++;
+            maxf=Math.max(maxf,hash[s.charAt(r)-'A']);
+            changes=(r-l+1)-maxf;
+            if(changes>k)
+            {
+                hash[s.charAt(l)-'A']--;
+                l=l+1;
+                changes=(r-l+1)-maxf;
+            }
+            if(changes<=k) { maxlen=Math.max(maxlen,r-l+1); }
+            r++;
+        }
+        return maxlen;
+    }
+}
+
+T.C. -> O(N)
+S.C. -> O(26)
+
+(8) Binary Subarrays with sum: 
+we can do this question also with help of prefsum concept,but we are trying to optimize the space to 0(1) that's why sliding window
+here classical sliding window(r moves forward, when sum go aboves then I make window in limit by shrinking from left side) didn't works because we have zeroes - and when we try to shrink then we left some subarrays because sum doesn't get affected due to 0 
+
+so there are 3 pattern of sliding window questions :
+
+(1) condition : target ke equla nhi hoga either less or greater -> in this case keep window always in the limit so it will always ne correct(expand and shrink to get the condition back)
+
+(2) count number of subarrays: exactly (usi condition pe ) tab calculate first <=goal and then for goal -1(in same method) and at last subtract there resukts you will get answer for exactly condition
+
+code:
+class Solution {
+    public int f(int[] arr,int goal)
+    {
+        if(goal<0) return 0; 
+        int l=0,r=0,sum=0,count=0;
+        while(r<arr.length)
+        {
+            sum+=arr[r];
+            while(sum>goal)
+            {
+                sum-=arr[l];
+                l++;
+            }
+            count=count+(r-l+1);
+            r++;
+        }
+        return count;
+    }
+    public int numSubarraysWithSum(int[] nums, int goal) {
+        int a = f(nums,goal);
+        int b = f(nums,goal-1);
+        int ans = a-b;
+        return ans;
+    }
+} 
+
+(9) Count Number of Nice Subarrays
+
+My brute Force approach: using 2 loops 
+
+code:
+     public class practice{
+    static int f(int[] arr,int k)
+    {
+        int n=arr.length,res=0;
+        for(int i=0;i<arr.length;i++)
+        {
+            int count=0;
+            for(int j=i;j<n;j++)
+            {
+                if(arr[j]%2!=0)
+                {
+                    count++;
+                }
+                if(count==k)
+                {
+                    res+=1;
+                }
+            }
+        }
+        return res;
+    }
+    public static void main(String[] args) {
+        int[] arr={1,1,2,1,1};
+        int k = 3;
+        int ans=f(arr,k);
+        System.out.println(ans);
+    }
+}
+
+Try doing with 3 loops also :
+
+My optimal logic :
+class Solution {
+    public  int f(int[] arr,int k)
+    {
+        int l=0,r=0,count=0,res=0,n=arr.length;
+        while(r<n)
+        {
+            if(arr[r]%2!=0) { count++; }
+            while(count>k)
+            {
+            if(arr[l]%2!=0) { count--; }
+            l++;
+            }
+        res=res+(r-l+1); 
+        r++;
+        }
+        return res;
+    }
+    public int numberOfSubarrays(int[] nums, int k) {
+        int a = f(nums,k);
+        int b = f(nums,k-1);
+        int ans = a-b;
+        return ans;
+    }
+}
+
+striver logic :
+class Solution {
+    public  int f(int[] arr,int k)
+    {
+        int l=0,r=0,sum=0,count=0,n=arr.length;
+        while(r<n)
+        {
+            sum+=(arr[r]%2);
+            while(sum>k)
+            {
+            sum=sum-(arr[l]%2);
+            l++;
+            }
+        count=count+(r-l+1); 
+        r++;
+        }
+        return count;
+    }
+    public int numberOfSubarrays(int[] nums, int k) {
+        int a = f(nums,k);
+        int b = f(nums,k-1);
+        int ans = a-b;
+        return ans;
+    }
+}
+
+isme according to striver pichle wala question : binary subarray wahi hai bas there is change in statements, it's like same pattern we have to recognise the pattern 
+
+Subarray with k different integers : brute force : using 2 loops and map but I have tried for brute using hashset 
+
+for optimal approach : we are trying with classical  two pointer and sliding window but the problem is that , the classical sliding window will not work because we are leaving many subarrays inside the boundary  
+Now we have changed the problem statement and checking for <=k  and trying to find can we expand and shrink properly in this problem statement , when we increment count , there is a reason because at the point where we are standing that is one subarray and the sinlgle element where r is there , that is also <=k so where you are standing count (r-l)+1(because when largest subarray is correct then all it's parts are also correct)                                               
+Mine thinkable logic which worked:
+code:class Solution {
+    public int f(int[] nums,int k)
+    {
+        int l=0,r=0,n=nums.length,count=0;
+        HashMap<Integer,Integer> map = new HashMap<>();
+        while(r<n)
+        {
+            map.put(nums[r],map.getOrDefault(nums[r],0)+1);
+            while(map.size()>k)
+            {
+                map.put(nums[l], map.get(nums[l]) - 1);
+                if(map.get(nums[l])==0)
+                {
+                    map.remove(nums[l]);
+                }
+                l++;
+            }
+            count+=(r-l+1);
+            r++;
+        }
+        return count;
+    }
+    public int subarraysWithKDistinct(int[] nums, int k) {
+        int a = f(nums,k);
+        int b = f(nums,k-1);
+        int ans = a-b;
+        return ans;
+    }
+}
+
+q) Minimum window Substring
+==========================================================================================
+code: import java.util.*;
+public class practice{
+    public static void main(String[] args) {
+        HashMap<Character,Integer> map=new HashMap<>();
+        String s = "ADOBECODEBANC", t = "ABC",ans="";
+        int minlen=Integer.MAX_VALUE,sIndex=-1;
+        for(int i=0;i<s.length();i++)
+        {
+            map.clear();
+            int cnt=0;
+            for(int m=0;m<t.length();m++) { map.put(t.charAt(m),map.getOrDefault(t.charAt(m),0)+1);}
+            for(int j=i;j<s.length();j++)
+            {
+                if(map.containsKey(s.charAt(j)) && map.get(s.charAt(j))>0)
+                {
+                    cnt++;
+                    map.put(s.charAt(j),map.getOrDefault(s.charAt(j),0)-1);
+                }
+                if(cnt==t.length())
+                {
+                    if(j-i+1<minlen)
+                    {
+                        minlen=j-i+1;
+                        sIndex=i;
+                        break;
+                    }
+                }
+            }
+        }
+        if(sIndex!=-1)
+        {
+            for(int K=sIndex;K< sIndex+minlen;K++)
+            {
+                ans+=s.charAt(K);
+            }
+        }
+        System.out.println(ans);
+    }
+}
+
+T.C. -> O(N2)
+S.C. -> O(size of string t)
+
+Optimal Approach : 
+code:class Solution {
+    public String minWindow(String s, String t) {
+        HashMap<Character,Integer> map = new HashMap<>();
+        int minlen=Integer.MAX_VALUE,sindex=-1,l=0,r=0,cnt=0;
+        String ans = "";
+        for(int i=0;i<t.length();i++)
+        {
+            map.put(t.charAt(i),map.getOrDefault(t.charAt(i),0)+1);
+        }
+        while(r<s.length())
+        {
+            if(map.containsKey(s.charAt(r)) && map.get(s.charAt(r))>0)
+            {
+                cnt++;
+            }
+            map.put(s.charAt(r),map.getOrDefault(s.charAt(r),0)-1);
+            while(cnt==t.length())
+            {
+                if(r-l+1<minlen)
+                {
+                    minlen=r-l+1;
+                    sindex=l;
+                }
+                map.put(s.charAt(l),map.getOrDefault(s.charAt(l),0)+1); 
+                if(map.get(s.charAt(l))>0) { cnt=cnt-1; }
+                l++;
+            }
+            r++;
+        }
+        if(sindex!=-1)
+        {
+            for(int i=sindex;i<sindex+minlen;i++)
+            {
+                ans+=s.charAt(i);
+            }
+        }
+        return ans;
+    }
+}

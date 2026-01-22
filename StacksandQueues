@@ -1,0 +1,264 @@
+Theory
+====================================================================
+What is Stack ?
+=========================
+Ans: Stack follows LIFO(Last In First Out) mechanism
+Stack has 4 different functions: push(),pop(),top(),size()
+We will understand this data structure with functions 
+push(2)
+push(3)
+push(4)
+push(1)              
+                    |2 3 4 1|
+pop()-> jo sabse last mein push hua tha , wahi sabse pehle bahar aayega
+                    |2 3 4|
+top() -> It will just give you last element(no deletion)
+                    -> 4                                           
+top()               -> 4(Again 4) Stack is |2 3 4|
+
+pop()               |2 3|
+
+push(5)             |2 3 5|
+top()               -> 5          Stack is |2 3 5|
+size()              -> 3
+    
+What is Queue?
+======================
+Ans: Queue is a data structure that works in concept of FIFO(First In First Out)
+Queue has 4 different functions: push(),pop(),top(),size()
+We will understand this data structure with function
+push(2)
+push(3)
+push(4)
+push(1)
+                                  |2 3 4 1|
+pop() -> jo sabse pehle aaya hai wahi sabse pehle jayega 
+                                  |3 4 1|
+top() -> It will just give you first element(no deletion)
+                                 -> 3 , Queue is |3 4 1|
+
+pop() ->                          |4 1|
+top() ->                         -> 4 , Queue is |4 1|
+push(7)                           |4 1 7|
+top()                            -> 4
+size()                           -> 3 
+
+Implement Stack using Arrays: for this implementation, size should be known , This can't be dynamic
+
+--------------------------<Some part is left here, Moving directly to coding part>----------
+
+
+
+
+Q) Balanced Parentheses 
+======================================================================
+: Whenever I'm getting a closing bracket , I'm checking the last opening I saw, Is that was of my type
+-> I should be able to see the last one , so which data structure - Stack 
+
+code: class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> st = new Stack<>();
+        for(int i=0;i<s.length();i++)
+        {
+            char ch = s.charAt(i);
+            if(ch=='(' || ch=='{' || ch=='[')
+            {
+                st.push(ch);
+            }
+            else if(ch==')')
+            {
+                if(!st.isEmpty() && st.peek()=='(') { st.pop(); }
+                else {return false; }
+            }
+            else if(ch=='}')
+            {
+                if(!st.isEmpty() && st.peek()=='{') { st.pop(); }
+                else{ return false; }
+            }
+            else{
+                if(!st.isEmpty() && st.peek()=='[') { st.pop(); }
+                else{ return false; }
+            }
+        }
+        return st.isEmpty();
+    }
+}
+
+T.C. -> O(N)
+S.C. -> O(N)
+
+
+Prefix,Infix,Postfix Conversions
+===================================================
+
+Operator: A symbol that performs an operation on one or more operands.
+Operand: The values or variables on which the operator acts.
+Example: In 5 + 3,
+- + is the operator
+- 5 and 3 are operands
+
+
+Operator   Priority
+^          3
+* /        2
++ -        1  
+
+Infix -> All the operators will be in between . Ex: (p+q)*(m-n)
+Prefix -> All the operators will be pre(before) the operand . Ex: x+pq-mn
+Postfix -> All the operators will be after the operand . Ex: pq+mn-*
+
+Infix to Postfix : a+b*(c^d-e)
+========================================
+i=0                  st                                     ans
+a                                                         a(if it is an operand I will add into ans)
++                    +(if operand then add in stack)      a(ans will say same)
+b                    +                                    ab
+*                  +*(if upcoming operator has priority>then ab
+                   stack has already had, add into stack)    
+
+(                   +*(                                    ab
+c                   +*(                                    abc
+^                +*(^(Again priority is greater than peek  abc
+                 element then add into  stack )  
+d                +*(^                                      abcd
+
+-        Now negative sign and peek element is ^ and upcoming operator - has less priority so , then we will pop out peek element and add into ans , and we will still check ki jo ab agla peek element hai agar uska bhi priority greater than ho upcoming  ho toh usko bhi pop karke ans mein daal de 
+
+-                  +*(-                                    abcd^
+e                  +*(-                                    abcd^e
+)  : the moment you see an closing bracket, you just take out everything and add into answer, till you encountered Opening bracket
+
+)                  +*                                      abcd^e-(operator was popped out and added and when we encounter opening we stop and that opening bracket was not added into ans )
+
+Now when iteration gets over, we will pop out everything from stack and we will add into ans : abcd^e-*+
+
+💡 Easy Language Steps
+===========================
+If the symbol is an operand (like a, b, c...) →
+➤ Add directly to the answer.
+
+*If the symbol is an operator (+, -, * , /, ^) →
+➤ Check the top (peek) of the stack:
+
+If the stack is empty or has lower priority, push the operator.
+
+If the top has higher or equal priority, pop operators from stack and add to answer,
+then push the new operator.
+
+If the symbol is '(' (opening bracket) →
+➤ Push it to the stack.
+
+If the symbol is ')' (closing bracket) →
+➤ Pop everything from the stack and add to answer until you find '('.
+➤ Remove '(' from the stack (don’t add it to answer).
+
+After scanning the entire expression →
+➤ Pop all remaining operators from the stack and add them to the answer.
+
+
+code : import java.util.*;
+public class practice{
+    static int prec(char ch)
+    {
+        switch(ch) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+            case '^':
+                return 3;
+        }
+        return -1;
+    }
+    static String infixtopostfix(String exp)
+    {
+        String ans="";
+        Stack<Character> st = new Stack<>();
+        int i=0,n=exp.length();
+        while(i<n)
+        {
+            if((exp.charAt(i)>='A' && exp.charAt(i)<='Z') || exp.charAt(i)>='a' && exp.charAt(i)<='z' || exp.charAt(i)>='0' && exp.charAt(i)<='9')
+            {
+                ans+=exp.charAt(i);
+            }
+            else if(exp.charAt(i)=='(')
+            {
+                st.push(exp.charAt(i));
+            }
+            else if(exp.charAt(i)==')')
+            {
+                while(!st.isEmpty() && st.peek()!='(')
+                {
+                    ans+=st.peek();
+                    st.pop();
+                }
+                st.pop();
+            }
+            else
+            {
+                while(!st.isEmpty() && prec(exp.charAt(i)) <= prec(st.peek()))
+                {
+                    ans+=st.peek();
+                    st.pop();
+                }
+                st.push(exp.charAt(i));
+            }
+            i++;
+        }
+        while(!st.isEmpty())
+        {
+            ans=ans+st.peek();
+            st.pop();
+        }
+        return ans;
+    }
+    public static void main(String[] args) {
+        String exp= "a+b*(c^d-e)^(f+g*h)-i";
+        String ans=infixtopostfix(exp);
+        System.out.println(ans);
+    }
+}
+
+
+Infix to Prefix
+====================================
+Steps: 1) Reverse the Infix
+       2) Infix to Postfix
+       3) Reverse that Answer
+
+       Expression : (A+B)*C-D+F
+                         |
+                    F+D-C*)B+A(      (after reversing scan through it , and convert 
+                    
+                                      opening bracket to closing and closing bracket to opening)
+                         |
+                    F+D-C*(B+A)
+
+        Now infix to postfix under some controlled condition 
+
+        i                    st                  ans
+        
+        F                                         F(operand directly add into ans)
+        +                   +(operator into stack) F
+        D                   +                     FD
+        
+        -                   +-(if operator accept ^   FD
+                            directly insert into st) 
+        C                   +-                    FDC
+        *                   +-*                   FDC
+        (                   +-*(                  FDC
+        B                   +-*(                  FDCB
+        +                   +-*(+                 FDCB
+        A                   +-*(+                 FDCBA
+        )                   +-*                   FDCBA+ (when there is closing bracket , take out everything from stack and add into ans till we encounter opening bracket and remove opening bracket from stack)
+
+        when iteration gets over pop out everything from stack and add into ans : FDCBA+*-+  
+
+Now, reverse everything : +-*+ABCDF
+
+
+
+
+
