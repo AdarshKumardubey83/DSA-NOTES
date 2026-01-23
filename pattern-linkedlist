@@ -1,4 +1,11 @@
 1) Singly linked list 
-problem 1-> Add Two Numbers 
+problem 1-> Add Two Numbers : jaise normal addition karte hai , add karte jate hai aur carry aage lete jate hai aage, bas hogaya
 isme humne DummyNode ka help liya hai , aur two pointer rakh ke dono ll pe, aur ek cy(carry variable) liya hai , jo check karega humesha har point pe ki kab carry jayega aur kab nhi 
 
+Whenever you want to create a new list always prefer DummyNode concept
+
+problem 2-> Odd Even LL : 
+
+Pattern 1
+============
+Add Two numbers aur Odd Even LL , in dono question mein hum 2 pointers ka help le rahe hai aur us behalf pe logic bana rahe hai , so I think they are similar kind of pattern using pointers and doing some changes according to the question.

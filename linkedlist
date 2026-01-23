@@ -224,6 +224,41 @@ class Solution {
     }
 }
 
+Brute Force: At last final ll mein pehle odd wala aayega uske baad even wala aayega , ek array list lenge usmein isi order mein put karenge, 2-2 baar jump karke , uske baad ll mein bhar denge
+
+pseudocode: 
+           if(head==null || head.next==null) return head; 
+           ArrayList = [],temp=head;
+           while(temp!=null && temp.next!=null)
+           {
+           list.add(temp.val);
+           temp=temp.netx.next;
+           }
+           if(temp!=null) list.add(temp.val);
+           temp=head.next;
+           while(temp!=null && temp.next!=null)
+           {
+           list.add(temp.val);
+           temp=temp.next.next;
+           }
+           if(temp!=null) list.add(temp.val);
+           i=0,temp=head;
+           while(temp!=null)
+           {
+           temp.data=arr[i];
+           i++;
+           temp=temp.next;
+           }
+           return head;
+
+T.C. -> O(N/2)+O(N/2)+O(N){ODD+EVEN+FULL LOOP TRAVERSE} => O(2N)
+S.C. -> O(N) {Using an list to store the elements}
+
+so for optimal , it gives idea that ki ab jo kuch bhi karna hai same ll pe karna hai kyuki external kuch use  nhi karna hai optimized karne ke liye
+
+optimal: 
+
+// pseudocode: 
 
 question 4) Sort a Linked List of 0's , 1's and 2's
 =========================================================
