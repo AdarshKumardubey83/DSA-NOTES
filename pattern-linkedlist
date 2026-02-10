@@ -6,6 +6,24 @@ Whenever you want to create a new list always prefer DummyNode concept
 
 problem 2-> Odd Even LL : 
 
+problem 3-> Sort a ll of 0's ,1's and 2's
+
 Pattern 1
 ============
-Add Two numbers aur Odd Even LL , in dono question mein hum 2 pointers ka help le rahe hai aur us behalf pe logic bana rahe hai , so I think they are similar kind of pattern using pointers and doing some changes according to the question.
+Add Two numbers aur Odd Even LL  , in dono question mein hum 2 pointers ka help le rahe hai aur us behalf pe logic bana rahe hai , so I think they are similar kind of pattern using pointers and doing some changes according to the question.
+
+Pattern 2 jada satik baith raha hai
+===================================
+Odd Even LL aur sort ll of 0's , 1's and 2's  :  odd even mein pointer rakh ke aur 0's , 1's and 2's mein dummynode banake same links change karne wala hi kaam kar rahe hai alag alag tarike se
+
+Pattern 3 (Slow and Fast Pointer)
+=================================
+1.Remove the nth node from the end: slow and fast pointer ke help se iske 
+2.Check if a linked list is palindrome or not 
+
+
+
+
+
+
+

@@ -1,0 +1,4 @@
+1) StringBuilder pe direct split method nhi lag sakta , kyuki split method String class ka part hai , Split lagane ke liye pehle Strig mein convert karna hoga.
+
+2) StringBuilder same address ko point karte  hai isliye agar kahi pe stringBuilder store hai , aur agar StringBuilder se khali toh jaha pe store hai StringBuilder waha se bhi khali hojayega
+

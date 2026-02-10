@@ -1,0 +1,99 @@
+Arrays
+========
+
+1)Set Matrix Zeroes
+  =================
+  
+Brute Force: jo bola hai woh kardo : travrese karke jao, aur dekho 0 kaha kaha pe hai ,aur row aur column 0 mark kardo. But one thing 0 mark kar doge toh phir next baar jo marked zero hai uske liye sabko karne lag jaoge isliye -1 mark karo , aur jo initially pehle se 0 hai usko mat karo , toh -1 mark karke uske baad last mein ek aur traversal mein jaha jaha -1 hai waha waha 0 mark kardo.
+
+code: class Solution {
+    public void markrow(int[][] arr,int i,int m)
+    {
+        for(int j=0;j<m;j++)
+        {
+            if(arr[i][j]!=0)
+            {
+                arr[i][j]=-1;
+            }
+        }
+    }
+    public void markcol(int[][] arr,int j,int n)
+    {
+        for(int i=0;i<n;i++)
+        {
+            if(arr[i][j]!=0)
+            {
+                arr[i][j]=-1;
+            }
+        }
+    }
+    public void setZeroes(int[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        for(int i=0;i<n;i++)
+        {                              ---> O(n into m)
+            for(int j=0;j<m;j++)
+            {
+                if(matrix[i][j]==0)
+                {
+                    markrow(matrix,i,m);    ---> O(n)
+                    markcol(matrix,j,n);    ---> O(n) 
+                }
+            }
+        }
+        for(int i=0;i<n;i++)
+        {                                       ---> O(n into m)
+            for(int j=0;j<m;j++)
+            {
+                if(matrix[i][j]==-1)
+                {
+                    matrix[i][j]=0;
+                }
+            }
+        }
+    }
+}
+
+T.C. -> O(n into m)+O(n)+O(n)+O(n into m) , it is somewhere near about power of cube
+S.C. -> O(1)
+
+Better Approach : O(n^3) brute isliye ho raha hai kyuki 2D array mein traversal mein n^2 lag gaya aur har row aur column pe jake 0 mark kar rahe hai , ye extra lag raha hai, we have to eliminate this
+===============   agar pure ek entire row mein ya pure ek entire col mein ek bhi zero hai iska matlab resultant matrix mein pura row, column zero hojayega, toh baar baar na jake 2 marker array banayenge ek row ke liye aur ek col ke liye , ki kaun sa row aur col at last resultant matrix mein 0 hoga.
+                  Aur at last col ya row   1 ho marked, pure row aur col ko 0 mark kardo.
+
+code: class Solution {
+    public void setZeroes(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[] col = new int [n];
+        int[] row = new int [m];
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(matrix[i][j]==0)
+                {
+                    row[i]=1;
+                    col[j]=1;
+                }
+            }
+        }
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(row[i]==1 || col[j]==1)
+                {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+}
+
+T.C. -> O(2 into n into m)
+S.C. -> O(n)+O(M)
+
+Optimal Approach : In order to optimize this we are already doing this in O(n^2) so for traversal in 2D matrix it will take this much , so we have to optimize space complexity
+=================
+

@@ -256,9 +256,27 @@ S.C. -> O(N) {Using an list to store the elements}
 
 so for optimal , it gives idea that ki ab jo kuch bhi karna hai same ll pe karna hai kyuki external kuch use  nhi karna hai optimized karne ke liye
 
-optimal: 
+optimal: isme hum oddpointer ko head pe rakh rahe hai aur even pointer ko head.next pe . Aur same ll ko pura change kar rahe hai , At last we will connect odd to even.
+         humesha jo even hai woh last mein hi hoga , kyuki yahi diya hai question mein , islliye jo bhi condition banega rokne ka woh even ke behalf pe lagao , kyuki odd toh humesha even ke piche hi rahega.
 
-// pseudocode: 
+ pseudocode: 
+             if(head==null || head.next==null) return head;   
+             odd=head,even=head.next,evenHead=head.next;   
+             while(even!=null && even.next!=null)
+             {
+                odd.next=odd.next.next;
+                even.next=even.next.next;
+
+                odd=odd.next;
+                even=even.next;
+             }
+             odd.next = evenHead;
+             return head;
+
+odd humesha sahi jagah pe hi rahega due to even condn , so no need of odd condn
+
+T.C. -> O(N/2) INTO 2 = O(N) , loop toh N/2 hi chal raha hai lekin 2 steps kar rahe hai , ek baar odd aage aur ek baar even aage , because we are doing two operations two links changes that boils down to O(N)
+S.C. -> O(1)
 
 question 4) Sort a Linked List of 0's , 1's and 2's
 =========================================================
@@ -337,7 +355,37 @@ but your code uses 3 separate loops → 3× loop overhead → CPU does far more 
 
 Your code also traverses the list only twice (same as Striver), but your second traversal is split into 3 loops, causing more CPU instructions, more loop overhead, and fewer optimizations → leading to TLE on very large inputs.
 
-Optimal Approach: 
+Optimal Approach: three dummy nodes banake, andar hi links change karke 3 lists bana liye hai uske baad un tino ko connect kar diye hai.
+
+code: if(head==null || head.next==null) return head;
+        // code here
+        Node temp=head;
+        Node zerohead = new Node(-1), onehead = new Node(-1), twohead = new Node(-1);
+        Node zero = zerohead, one=onehead ,two=twohead;
+        while(temp!=null)
+        {
+            if(temp.data==0)
+            {
+                zero.next=temp;
+                zero=temp;
+            }
+            else if(temp.data==1)
+            {
+                one.next=temp;
+                one=temp;
+            }
+            else{
+                two.next=temp;
+                two=temp;
+            }
+            temp=temp.next;
+        }
+        zero.next = (onehead.next!=null)? onehead.next : twohead.next;
+        one.next = twohead.next;
+        two.next = null;
+        return zerohead.next;
+    }
+}
 
 Question 5)Remove Nth Node from End of Linked List
 =========================================================
@@ -414,7 +462,7 @@ code: class Solution {
 
 Question 6) Reverse Linked List
 =========================================================
-Brute Force Approach : reverse karna hai tih pehle stack mein daal denge aur uske baad stack se nikal ke linkedlist mein daal denge starting se 
+Brute Force Approach : reverse karna hai toh pehle stack mein daal denge aur uske baad stack se nikal ke linkedlist mein daal denge starting se 
 
 code:class Solution {
     public ListNode reverseList(ListNode head) {
@@ -655,6 +703,43 @@ code: class Solution {
 T.C. -> O(3n) , 2 times reversal and 1 time traversal
 S.C. -> O(1)
 
+Optimal Approach: Using recursion 
+
+code: class Solution {
+    static int cy = 1;
+    static int helper(Node temp)
+    {
+        if(temp==null) return 1;
+        int carry=helper(temp.next);
+        temp.data=temp.data+carry;
+        if(temp.data<10) return 0;
+        temp.data=0;
+        return 1;
+    }
+    public Node addOne(Node head) {
+        int carry = helper(head);
+        if(carry==1)
+        {
+            Node newNode = new Node(1);
+            newNode.next = head;
+            head = newNode;
+        }
+        return head;
+    }
+}
+
+T.C. -> O(N)
+S.C. -> O(N)
+
+Pros and Cons of Iterative and Recursive Approach:
+
+Iterative                                                                       Recursive
+=========                                                                       =========
+Pros: No Space                                                                  Pros: No tampering of data, addition done in place & in faster time.
+
+Cons: tampering data and                                                        Cons: Extra Space    
+      more time taken 
+
 Question 9) Find the intersection point of linked list
 BruteForce Approach : Using HashMap
 code:public class Solution {
@@ -803,6 +888,9 @@ code: public class Solution {
         return temp1;
     }
 }
+
+T.C. -> O(N1+N2) , in case of no intersection t1 and t2  will traverse full linked list that's why
+S.C. -> O(1)
 
 Question 10) Find the middle element of linked list
 Brute Force Approach: pehle total count nikal lo(size of ll) aur in case of both odd and evn ll , the middle will be at (n/2+1) toh ek aur loop lagake is element tak pahuch jao
