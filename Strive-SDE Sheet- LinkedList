@@ -252,7 +252,8 @@ LinkedList Part-II
 =====================
 
 Question 7)Find the intersection point of ll
-Question 9) Find the intersection point of linked list
+
+
 BruteForce Approach : Using HashMap
 code:public class Solution {
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
@@ -403,3 +404,54 @@ code: public class Solution {
 
 T.C. -> O(N1+N2) , in case of no intersection t1 and t2  will traverse full linked list that's why
 S.C. -> O(1)
+
+Question 8) Detect a loop in LL
+
+
+Brute Force Approach : koi linkedlist mein cycle hai ye pata chalega aise ki : jab traverse karte hue hum dobara usi linkedlist pe pahuch jayenge, so we will use HashMap to see whether this particular linkedlist is arrive earlier or not
+
+code: public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if(head==null || head.next==null) return false;
+        HashMap<ListNode,Integer> map = new HashMap<>();
+        ListNode temp = head;
+        while(temp!=null)
+        {
+            if(map.containsKey(temp))
+            {
+                return true;
+            }
+            map.put(temp,map.getOrDefault(temp,0)+1);
+            temp = temp.next;
+        }
+        return false;
+    }
+}
+
+T.C. -> O(N*2*logN) traversal*depending on your map takes
+S.C. -> O(N) for storing all the nodes
+
+Optimal Approach: using Tortoise and Hare Algorithm , slow -> 1x , fast -> 2x 
+
+code:public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if(head==null || head.next==null) return false;
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast!=null && fast.next!=null)
+        {
+            slow=slow.next;
+            fast=fast.next.next;
+            if(fast==slow)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+T.C. -> 0(N)
+S.C. -> 0(1)
+
+slow 1x aur fast 2x toh so if distance is d , at every step distance is decreasing d-1 , so d%1==0 , isliye it is guranteed ki slow and fast will meet , that;s why 1x and 2x . Otherwise why not 3x because every d distance will  not be divisible by 3
