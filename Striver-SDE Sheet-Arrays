@@ -242,7 +242,7 @@ code: class Solution {
 }
 
 
-5) Best Time to Buy and Sell Stock
+5) Best Time to Buy and Sell Stock : we are not buying and selling on same day because profit will be 0 , max profit banana hai na , toh jis bhi jagah khade hai usse piche minimum rupee mein kharide honge , tabhi toh max profit banega , isliye min ko track kar rahe hai
 
 if you are selling on ith day , you buy on the minimum price from 1st day to (i-1) day.
 
