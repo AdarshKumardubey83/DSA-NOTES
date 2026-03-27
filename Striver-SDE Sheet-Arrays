@@ -322,3 +322,71 @@ code: class Solution {
 }
 
 T.C. ->   O(N^2)     
+
+7) Find the Duplicate Number
+
+Brute Force Approach: Sort the given array then the duplicates number will be together and then the value of i will be equal to i+1
+
+T.C. -> O(N Log N) 
+S.C. -> O(1)
+
+improved version of this: ek frequency array banayenge , with all zeores and check karke mark karte jayenge us number ke index pe 1 aur woh , jab dobara aayega tab 1 already marked hai , pata chal jayega ki duplicate hai
+
+T.C. -> O(N)
+S.C. -> O(N)
+
+we improved T.C. but S.C. badh gaya.
+
+Most Optimal Sol: most optimal sol uses the linked list cycle method 
+
+code: class Solution {
+    public int findDuplicate(int[] nums) {
+        int slow = nums[0];
+        int fast = nums[0];
+        do{
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        } while(slow!=fast);
+        fast = nums[0];
+        while(slow!=fast){
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        return slow;
+    }
+}
+
+
+🔹 Step 1: Cycle kyun bana?
+
+👉 Kyuki duplicate hai, isliye path circular ho gaya
+
+🔹 Step 2: Fast catches slow
+Fast 2 step lega
+Slow 1 step lega
+
+👉 Circular track pe:
+
+Fast banda slow ko pakad lega (guaranteed)
+
+✔️ Yeh hai first collision
+
+🔹 Step 3: Ab magic part
+
+Ab:
+
+Ek banda ko start pe bhejo
+Dusra meeting point pe hi rakho
+
+Dono ab same speed (1 step) se chalenge
+
+👉 Wo dono milenge:
+✔️ cycle ke starting point par
+
+🔹 Real meaning
+Track ka start = array ka start
+Cycle ka entry point = duplicate number
+🔥 Final intuition
+
+“Circular track pe fast slow ko pakad lega. Phir start aur meeting point se same speed se chalne par dono cycle ke entry point pe milte hain — wahi duplicate hai.”
+

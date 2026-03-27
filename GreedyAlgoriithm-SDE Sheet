@@ -24,3 +24,6 @@ code: class Solution {
         return cnt;
     }
 }
+
+T.C. -> O(N)+O(N LOG N)+0(N) -> O(2N + N LOG N)
+S.C. -> O(N)
