@@ -455,3 +455,59 @@ T.C. -> 0(N)
 S.C. -> 0(1)
 
 slow 1x aur fast 2x toh so if distance is d , at every step distance is decreasing d-1 , so d%1==0 , isliye it is guranteed ki slow and fast will meet , that;s why 1x and 2x . Otherwise why not 3x because every d distance will  not be divisible by 3
+
+Question 8) Reverse Nodes in k-Group
+
+concept : Linked list ko hum k-k size ke groups mein todte hain, phir har group ka k-th node find karke us group ko isolate (kThNode.next = null) kar dete hain, uske baad us group ko reverse karte hain aur previous group ke last node (prevLast) se connect kar dete hain; 
+          first group ke case mein head update hota hai, phir prevLast ko current group ke last (jo reverse ke baad temp ban jata hai) par set karke temp ko nextNode par move kar dete hain, 
+          aur ye process tab tak chalta hai jab tak nodes available hain, agar last group ka size k se chhota ho toh usse reverse nahi karte; overall idea hai “k nodes lo → tod do → reverse karo → piche jodo → aage badho”.
+
+code:class Solution {
+    ListNode reverseLinkedList(ListNode head)
+    {
+        ListNode prev = null , curr = head , after = head.next;
+        while(curr!=null)
+        {
+            curr.next = prev;
+            prev = curr;
+            curr = after;
+            if(curr!=null)after = curr.next;
+        }
+        return prev;
+    }
+    ListNode getkthNode(ListNode temp, int k)
+    {
+        k-=1;
+        while(temp!=null && k>0)
+        {
+            k--;
+            temp=temp.next;
+        }
+        return temp;
+    }
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode temp = head;
+        ListNode prevLast = null;
+        while(temp!=null)
+        {
+            ListNode kThNode = getkthNode(temp,k);
+            if(kThNode==null) {
+                if(prevLast!=null) prevLast.next = temp;
+                break;
+            }
+            ListNode nextNode = kThNode.next;
+            kThNode.next = null;
+            reverseLinkedList(temp);
+            if(temp==head)
+            {
+                head=kThNode;
+            }
+            else{
+                prevLast.next = kThNode;
+            }
+            prevLast = temp;
+            temp = nextNode;
+        }
+        return head;
+    }
+}

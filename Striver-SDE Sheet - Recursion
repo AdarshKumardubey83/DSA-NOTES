@@ -1,0 +1,9 @@
+Subset Sum II
+
+Brute Force Approach: We will be using pick and non pick technique to generate all 2^n subsets. Now we hsve to put all the 2^n subsets into the set. All duplicates will go away , and then again convert it into list of list .
+            So, In this approach after recursion we are using extra time .
+
+
+We have to optimize in recusrion itself so we can leave all duplicates subsets 
+
+Better Approach:
