@@ -1,0 +1,194 @@
+Binary Tree: A binary tree is a hierarchical data structure where each node can have at most two children
+
+Root Node: The topmost node of the tree is called the root.
+Children: Nodes directly connected below another node are called children.
+Leaf Node: A node having no children is called a leaf node.
+
+Consider this tree:
+
+         A
+       /   \
+      B     C
+     / \
+    D   E
+
+Subtree
+A subtree is a smaller tree formed from any node and all of its children below it.
+
+Example:
+The subtree of B is:
+
+      B
+     / \
+    D   E
+
+
+Ancestor
+An ancestor of a node is any node that comes above it in the path from root.
+
+For node E:
+
+B is an ancestor
+A is also an ancestor
+
+Because path is:
+
+A → B → E
+
+So all nodes before E in this path are ancestors.
+
+Types of Binary tree
+=======================
+
+1) Full Binary Tree: Every node either has 0 or 2 children.
+
+2) Complete Binary Tree (CBT)
+
+A binary tree is called a Complete Binary Tree when:
+
+All levels are completely filled
+except possibly the last level.
+In the last level, nodes are filled from left to right without gaps.
+
+Easy intuition:
+Nodes should not “skip places” on the left side.
+
+Complete Binary Tree Example
+
+        1
+      /   \
+     2     3
+    / \   /
+   4   5 6
+
+Why is this complete?
+
+All upper levels are fully filled.
+Last level nodes (4,5,6) are filled left to right.
+No empty gap exists before 6.
+
+So this is a Complete Binary Tree.
+
+Not Complete Binary Tree Example
+
+        1
+      /   \
+     2     3
+    /       \
+   4         6
+
+Why is this NOT complete?
+Because:
+
+Left side has a missing node.
+2 does not have right child.
+But later 3 has a right child (6).
+
+There is a gap before 6.
+
+In complete binary tree:
+you cannot leave empty spaces in between.
+
+3) Perfect BT: all leaf nodes are at same level
+
+Example of Perfect Binary Tree:
+
+          1
+       /     \
+      2       3
+     / \     / \
+    4   5   6   7
+
+
+Not Perfect Binary Tree Example
+
+          1
+       /     \
+      2       3
+     / \     
+    4   5
+
+4) Balanced BT: height of tree at max log(N) where N is nodes
+
+5) Degenerate Tree (Skewed Tree)
+
+A Degenerate Binary Tree is a tree where every parent node has only one child.
+
+It behaves almost like a linked list.
+
+Example:
+
+1
+ \
+  2
+   \
+    3
+     \
+      4
+
+Here:
+
+each node has only one child
+tree becomes long and narrow
+
+So this is a Degenerate Tree.
+
+Another example (left skewed):
+
+      4
+     /
+    3
+   /
+  2
+ /
+1
+
+Types of Degenerate Trees
+
+Left Skewed Tree
+Nodes continue only toward left.
+Right Skewed Tree
+Nodes continue only toward right.
+
+
+Questions
+===========
+1) Inorder Traversal : (left,root,right)
+
+code: class Solution {
+    void inorder(TreeNode root, ArrayList<Integer> ans)
+    {
+        if(root==null) return;
+        inorder(root.left,ans);
+        ans.add(root.val);
+        inorder(root.right,ans);
+    }
+    public List<Integer> inorderTraversal(TreeNode root){
+        ArrayList<Integer> ans = new ArrayList<>();
+        inorder(root,ans);
+        return ans;
+    }
+}
+
+T.C. -> O(N)
+S.C. -> O(N)
+
+2) Preorder Traversal : (root,left,right)
+
+code: class Solution {
+    void preorder(TreeNode root , List<Integer> ans)
+    {
+        if(root==null) return;
+        ans.add(root.val);
+        preorder(root.left,ans);
+        preorder(root.right,ans);
+    }
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        preorder(root,ans);
+        return ans;
+    }
+}
+
+T.C. -> O(N)
+S.C. -> O(N)
