@@ -192,3 +192,7 @@ code: class Solution {
 
 T.C. -> O(N)
 S.C. -> O(N)
+
+3) Postorder Traversal : (left,right,root)
+
+code: 
