@@ -257,3 +257,40 @@ code: class Solution {
     }
 }
 
+T.C. -> O(N)
+S.C. -> O(N)
+
+Space complexity we can't make better. Every corresponding opening there will be corresponding closing , we have to store it somewhere.
+
+6) Next Greater Element [Monotonic Stack]
+
+Monotonic Stack : When we use stack to store element in a specific order(either increasing or decreasing) then we call monotonic stack.
+
+Brute Force Approach : class Solution {
+    public ArrayList<Integer> nextLargerElement(int[] arr) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        for(int i=0;i<arr.length;i++)
+        {
+            boolean flag = false;
+            for(int j=i+1;j<arr.length;j++)
+            {
+                if(arr[j]>arr[i])
+                {
+                    flag = true;
+                    ans.add(arr[j]);
+                    break;
+                }
+            }
+            if(flag==false)
+            {
+                ans.add(-1);
+            }
+        }
+        return ans;
+    }
+}
+
+T.C. -> O(N^2)
+S.C. -> O(N) but it is used to store the ans, so this can't be improved.
+
+Optimal Approach : 
