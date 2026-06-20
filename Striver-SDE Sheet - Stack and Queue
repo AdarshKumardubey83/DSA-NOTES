@@ -293,4 +293,24 @@ Brute Force Approach : class Solution {
 T.C. -> O(N^2)
 S.C. -> O(N) but it is used to store the ans, so this can't be improved.
 
-Optimal Approach : 
+Optimal Approach : class Solution {
+    public ArrayList<Integer> nextLargerElement(int[] arr) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        Stack<Integer> st = new Stack<>();
+        for(int i=arr.length-1;i>=0;i--)
+        {
+            while(!st.isEmpty() && st.peek()<=arr[i])
+            {
+                st.pop();
+            }
+            if(st.isEmpty()) ans.add(-1);
+            else ans.add(st.peek());
+            st.push(arr[i]);
+        }
+        Collections.reverse(ans);
+        return ans;
+    }
+}
+
+T.C. -> O(2N)
+S.C. -> O(N) + O(N)
