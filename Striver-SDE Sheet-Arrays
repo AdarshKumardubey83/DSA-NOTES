@@ -494,7 +494,7 @@ Cycle ka entry point = duplicate number
 Arrays Part - 4
 =================
 
-1) Two Sum 
+1) Two Sum : There are two varities in this problem , one is return the indices and second one is say yes or no
 
 Brute Force Approach :
 class Solution {
@@ -543,4 +543,134 @@ Time Complexity: O(N) because we traverse the array only once, and each lookup o
 
 Space Complexity: O(N) since in the worst case we may store all elements of the array in the hash map.
 
-Optimal Approach: 
+Optimal Approach: For first varity we have to store indices also so this optimal approach is not possible , but for second varity we can use two pointer approach , but first we have to sort the array and then use two pointer approach
+
+code: class Solution {
+    public boolean twoSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        int left = 0 , right = nums.length-1;
+        while(left<right)
+        {
+            int sum = nums[left]+nums[right];
+            if(sum==target)
+            {
+                return true;
+            }
+            else if(sum>target)
+            {
+                right--;
+            }
+            else{
+                left++;
+            }
+        }
+        return false;
+    }
+}
+
+2) Three Sum: 
+
+Brute Force Approach: 3 nested loops , check for every triplet if sum is zero or not
+
+code: class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        int n=nums.length;
+        Set<List<Integer>> set=new HashSet<>();
+        for(int i=0;i<n;i++)
+        {
+            for(int j=i+1;j<n;j++)
+            {
+                for(int k=j+1;k<n;k++)
+                {
+                    if(nums[i]+nums[j]+nums[k]==0)
+                    {
+                        List<Integer>temp=Arrays.asList(nums[i],nums[j],nums[k]);
+                        temp.sort(null);
+                        set.add(temp);
+                    }
+                }
+            }
+        }
+        List<List<Integer>> ans=new ArrayList<>(set);
+        return ans;
+    }
+}
+
+Time Complexity: O(N3 * log(no. of unique triplets)), where N = size of the array.
+Reason: Here, we are mainly using 3 nested loops. And inserting triplets into the set takes O(log(no. of unique triplets)) time complexity. But we are not considering the time complexity of sorting as we are just sorting 3 elements every time.
+
+Space Complexity: O(2 * no. of the unique triplets) as we are using a set data structure and a list to store the triplets.
+
+Better Approach : class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        int n = nums.length;
+        Set<List<Integer>> ans = new HashSet<>();
+        for(int i=0;i<n;i++)
+        {
+            HashSet<Integer> set = new HashSet<>();
+            for(int j=i+1;j<n;j++)
+            {
+                int k = -(nums[i]+nums[j]);
+                if(set.contains(k))
+                {
+                    List<Integer> temp = Arrays.asList(nums[i],nums[j],k);
+                    Collections.sort(temp);
+                    ans.add(temp);
+                }
+                set.add(nums[j]);
+            }
+        }
+        return new ArrayList<>(ans); 
+    }
+}
+
+Time Complexity: O(N2 * log(no. of unique triplets)),
+as we are mainly using 3 nested loops. And inserting triplets into the set takes O(log(no. of unique triplets)) time complexity. But we are not considering the time complexity of sorting as we are just sorting 3 elements every time.
+
+Space Complexity: O(2 * no. of the unique triplets) + O(N) as we are using a set data structure and a list to store the triplets and extra O(N) for storing the array elements in another set.
+
+
+Optimal Approach : In brute and Better we are using set to get the all unique triplets . First we are sorting and then placing in set
+Now we have to get rid of this set data structure .
+
+We will first sort the array and then try to formulate an algorithm , so just I can get all the unqiue triplets
+and do not require any external data structure to filter out the duplicates.
+
+code: class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        List<List<Integer>> ans = new ArrayList<>();
+        for(int i=0;i<n;i++)
+        {
+            if(i>0 && nums[i]==nums[i-1]) continue;
+            int j = i+1;
+            int k = n-1;
+            while(j<k)
+            {
+                int sum = nums[i]+nums[j]+nums[k];
+                if(sum<0){
+                    j++;
+                }
+                else if(sum>0){
+                    k--;
+                }
+                else{
+                    List<Integer> temp = Arrays.asList(nums[i],nums[j],nums[k]);
+                    ans.add(temp);
+                    j++;
+                    k--;
+                    while(j<k && nums[j]==nums[j-1]) j++;
+                    while(j<k && nums[k]==nums[k+1]) k--;
+                }
+            }
+        }
+        return ans;
+    }
+}
+
+Complexity Analysis
+
+Time Complexity: O(NlogN)+O(N2), as The pointer i, is running for approximately N times. And both the pointers j and k combined can run for approximately N times including the operation of skipping duplicates. So the total time complexity will be O(N2). 
+
+Space Complexity: O(no. of quadruplets), This space is only used to store the answer. We are not using any extra space to solve this problem. So, from that perspective, space complexity can be written as O(1).
