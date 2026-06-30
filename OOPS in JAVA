@@ -1,0 +1,86 @@
+Problems with traditional Approach
+====================================
+
+String name = "Aditya";
+int age = 28 ;
+int rollno = 101;
+String college = "IIT Guwahati";
+
+String name2 = "Aditya";
+int age2 = 28 ;
+int rollno2 = 101;
+String college2 = "IIT Guwahati";
+
+void print(String name , int age , int rollno , String college)
+{
+    System.out.println(...);
+}
+
+Problems
+============
+
+1) Need a lot of independent variable to represent one student.
+2) If I pass the student to a function I need to pass all 4 variables.
+3) I need to create new set of variables for new student.
+4) No authority over data.
+
+
+Object Oriented Programming
+============================
+
+Real world ki mimic karte hai oop mein.
+
+Objects are being created in Heap memory.
+
+Student s1;        // Reference variable declaration
+s1 = new Student(); // Object creation and reference assignment
+s1 is a reference variable created in stack memory (if it's a local variable).
+new Student() creates a Student object in heap memory.
+The new keyword returns the address (reference) of the created object.
+That address is stored in s1.
+s1 does not store the object itself; it only stores the reference (memory address) of the object.
+
+new -> dynamic memory allocation , dynamic means runtime mein 
+
+---> compile time [static]
+---> Run time [dynamic]
+
+public class practice{
+    public static void main(String[] args) {
+        Student s1 = new Student();
+        Student s2 = new Student();
+
+        s1.name = "Aditya";
+        s1.age = 28;
+        s1.rollNumber = 101;
+        s1.college = "IIT Guwahati";
+
+        s2.name = "Rohit";
+        s2.age = 28;
+        s2.rollNumber = 102;
+        s2.college = "IIT Guwahati";
+
+        s1.markAttendance();
+        s2.markAttendance();
+
+        s1.print();
+        s2.print();
+    }
+}
+
+class Student{
+    String name;
+    int age;
+    int rollNumber;
+    String college;
+
+    void markAttendance(){
+        System.out.println("Attendance marked by " + name);
+    }
+
+    void print(){
+        System.out.println(name + "," + age + "," + rollNumber + "," + college);
+    }
+
+}
+
