@@ -1,3 +1,4 @@
+====================================
 Problems with traditional Approach
 ====================================
 
@@ -83,4 +84,72 @@ class Student{
     }
 
 }
+
+
+========================
+Constructors in Java
+========================
+
+public class practice{
+    public static void main(String[] args) {
+        Student s1 = new Student();
+
+        //default values
+        System.out.println(s1.name);
+        System.out.println(s1.age);
+        System.out.println(s1.rollno);
+        System.out.println(s1.college);
+    }
+}
+
+class Student{
+    String name;
+    int age;
+    int rollno;
+    String college;
+}
+
+
+"Object heap memory ke andar banta hai. Jo variables us object ka part hote hain (non-static variables), 
+woh bhi object ke saath heap memory mein store hote hain. Inhi variables ko instance variables kehte hain."
+
+In instance variables ke pass hoti hai default value, Agar koi value humne assign nhi ki toh  default  values assign hojayengi.
+
+Har data type ke liye default values alag hoti hai
+
+/*
+Integer -> 0
+floating -> 0.0
+Boolean -> false
+String -> null
+*/
+
+Java mein hum jab bhi koi object declare karte hai aur us object ka jo reference variable hota hai uski value hum dete hai null.
+String humara normal data type nhi hai , primitive data type nhi hai , String ek non-primitive data type hai , ye classes and objects ka part hoga , 
+Aur String ek class hai aur uski hum object bhi banate honge.
+
+toh String college; -> college ek reference variable hai , is reference variable mein humne kuch dala hi nhi , isliye bydefault null store hogaya.
+
+imp: Local variables hai no default values. Error-> int x;
+                                                    System.out.println(x); err-> local variable x is not initialized
+
+
+
+Constructors -> To create an Object
+
+Rules of Constructor
+====================
+
+1) Same name as class.
+2) No return type , not even void
+3) Automatically called during object creation.
+4) Used to initialize an object.
+5) It can also be Overloaded.
+
+ye hai default Constructor :
+
+Student() {
+//empty           --> ye java khud se banata hai jab aap nhi banate ho constructor
+}
+
 
