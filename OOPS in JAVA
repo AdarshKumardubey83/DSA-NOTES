@@ -1,3 +1,5 @@
+
+
 ====================================
 Problems with traditional Approach
 ====================================
@@ -151,5 +153,120 @@ ye hai default Constructor :
 Student() {
 //empty           --> ye java khud se banata hai jab aap nhi banate ho constructor
 }
+
+Q) Can we call our Constructor manually? 
+
+Ans: No ya toh this(name,age) karke call karenge ya jab object banega tab call hoga Student s1 = new Student();
+     but normal function ke tarah call nhi kar sakte 
+
+
+Q) ye jo new keyword hai ye dynamically(run time) pe memory ko allocate karta hai heap memory mein lekin aisa bhi toh hosakta hai ki runtime pe heap memory mein space hi na mile?
+
+Ans: Bilkul aisa hosakta hai ki heap memory humari pehle se hi full ho, hume space hi na mile is object ko allocate karne ka . Us case mein hume ek runtime exception milega , jab humare pass enough spcae nhi hoga heap memory mein.
+
+
+=================
+Object Deep Dive
+=================
+
+Student s1 = new Student();
+
+s1 in stack memory takes 4 bytes or 8 bytes depends on JVM , but generally 4 bytes
+
+Object Size: 1. Header Size/ Object Headers
+             2. Exact fields
+             3. Padding   
+
+             Object Headers
+                  |
+                  |
+                Metadata
+                /    \
+               /      \
+            Mark       Class
+            Words      Pointer 
+ ---> lock                 this keyword
+ ---> Synchronization        4 bytes  or 8 bytes
+ ---> Garbage collection
+      8 bytes  
+
+
+Exact fields : jo class ke andar exact data hoga uska size.
+
+Padding: jitna bhi data hoga usme aur size add karke koshish karega 8 bytes ke multiple mein karne ka. good for CPU
+
+Call by Value vs call by Reference
+===================================
+
+//call by value
+public class practice{
+    public static void main(String[] args) {
+        int x = 4;
+        int y = 5;
+
+        System.out.println(x + "," + y);
+
+        addTen(x,y);
+
+        System.out.println(x +"," + y);
+    }
+    static void addTen(int x , int y)
+    {
+        x = x+10;
+        y = y+10;
+    }
+}
+
+o/p: 4,5
+     4,5
+
+
+//call by reference ---> There is no call by reference in java.
+
+public class practice{
+    public static void main(String[] args) {
+        Random r1 = new Random(4,5);
+
+        System.out.println(r1.x+" ,"+r1.y);
+
+        addTen(r1);
+
+        System.out.println(r1.x+" ,"+r1.y);
+
+    }
+    static void addTen(Random r){
+        r.x = r.x+10;
+        r.y = r.y+10;
+    }
+}
+
+class Random{
+    int x;
+    int y;
+
+    Random(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+Call by Value — Notes
+
+Call by Value is a method of passing arguments to a function where a copy of the actual value is passed to the function.
+
+Key Points
+The function receives a copy of the original variable.
+Changes made to the parameter inside the function do not affect the original variable.
+The actual variable and function parameter have separate memory locations.
+
+Aur java mein call by value ka sirf concept hai , call by reference ka nhi 
+Aur jo woh code work kar raha tha woh bhi call by value hi kar raha hai, call by reference nhi
+
+Second case mein kya hua ki r1 ke andar jo address tha object ka woh r , ek naya reference varianle bana aur uske andar store hogaya
+toh isliye changes same object mein hue but hua call by value hi , isliye r1 ne same address pe value increment kardi.
+
+
+so Java is call by value always not call by reference but non-primitives ke case mein same object ka address copy hojata hai alag variables mein toh taste milta hai call by reference.
 
 
