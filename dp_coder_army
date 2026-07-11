@@ -1,0 +1,59 @@
+Dynamic Programming: Jo kaam ek baar kar liya usko dobara mat karo
+
+Hum DP ke problems ko in steps mein solve karenge:
+
+Recursive -> Top Down -> Bottom Up -> Space Optimization 
+
+Fibonacci Series : [0 1 1 2 3 5 8 13...]
+
+                              
+                         f(5) = 5
+                        /        \
+                  f(4) = 3       f(3) = 2
+                   /    \         /    \
+            f(3)=2    f(2)=1  f(2)=1  f(1)=1
+             /  \       / \      / \
+       f(2)=1 f(1)=1 f(1)=1 f(0)=0 f(1)=1 f(0)=0
+        / \
+   f(1)=1 f(0)=0
+
+
+recursive code: 
+
+int fib(int n) 
+{
+    if(n<=1)
+        return n;   
+
+    return fib(n-1) + fib(n-2);
+
+}  
+
+T.C. -> 2^n   depth n hai for n = 5 aur har level pe 2 hai 
+
+ab yaha maine already f(3) ko calculate kar liya hai but fir bhi maine dobara f(3) ko calculate kiya hai, ye dobara kyu kare computation bachate hai
+
+Top down approach:
+Recursive code :
+  --> Result store
+  --> Result already calculated hai , dobara calculate mat karo
+
+code: import java.util.*;
+public class practice{
+    static int fib(int n,int[] dp)
+    {
+        if(n<=1) return n;
+        if(dp[n]!=-1) return dp[n];
+        return dp[n]= fib(n-1,dp)+fib(n-2,dp);
+    }
+    public static void main(String[] args) {
+        int n = 46;
+        int[] dp = new int[n+1];
+        Arrays.fill(dp,-1);
+        System.out.println(fib(n,dp));
+    }
+}  
+
+
+Bottom up approach: matlab for loop se solve karunga ab
+
