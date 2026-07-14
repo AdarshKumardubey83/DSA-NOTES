@@ -1,9 +1,100 @@
-Subset Sum II
+Recursion : When a function calls itself until a specified condition is met.
+==========
 
-Brute Force Approach: We will be using pick and non pick technique to generate all 2^n subsets. Now we hsve to put all the 2^n subsets into the set. All duplicates will go away , and then again convert it into list of list .
-            So, In this approach after recursion we are using extra time .
+In your code:
+
+static void print() {
+    System.out.println("1");
+    print();
+}
+
+Every time print() is called, a new stack frame is added to the Call Stack:
+
+print()
+print()
+print()
+print()
+main()
+
+Since there is no base condition, print() keeps calling itself, old calls remain in the stack, and the stack eventually becomes full.
+
+No Base Condition
+        ↓
+Infinite Recursive Calls
+        ↓
+Stack Becomes Full
+        ↓
+StackOverflowError
+
+Definition: StackOverflowError occurs when the Call Stack becomes full due to too many active method calls.
 
 
-We have to optimize in recusrion itself so we can leave all duplicates subsets 
+Base condition is the condition that stops recursion.
 
-Better Approach:
+Example:
+
+if (n == 0) {
+    return;
+}
+
+Without a base condition, the function keeps calling itself and may cause StackOverflowError.
+
+In short:
+
+Base condition tells the recursive function when to stop calling itself.
+
+1) Sum of first N numbers
+   =======================
+
+parameterised way : 
+=================
+
+public class practice{
+    static void f(int i,int sum){
+        if(i<1){
+            System.out.println(sum);
+            return;
+        }
+        f(i-1,sum+i);
+    }
+    public static void main(String[] args) {
+        int n = 3;
+        f(n,0);
+    }
+}
+
+explanation : This is Parameterized Recursion because we pass the calculated sum as a parameter in every recursive call.
+
+f(3, 0)
+   ↓
+f(2, 3)
+   ↓
+f(1, 5)
+   ↓
+f(0, 6)
+   ↓
+Print 6
+
+Here:
+
+i → decreases toward the base condition.
+sum → stores the updated sum.
+i < 1 → base condition.
+
+In short: In parameterized recursion, we carry the answer (sum) as a parameter and print it when the base condition is reached.
+
+functional recursion:
+====================
+
+public class practice {
+    static int f(int n)
+    {
+        if(n==0) return 0;
+        return n + f(n-1);
+    }
+    public static void main(String[] args) {
+        int n = 4;
+        System.out.println(f(n));
+    }
+}
+
