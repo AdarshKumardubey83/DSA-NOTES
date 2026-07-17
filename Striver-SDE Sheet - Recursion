@@ -125,6 +125,7 @@ code: public class practice{
 
 using single variable: 
 
+
 public class practice{
     static void f(int i , int[] arr,int n)
     {
@@ -142,4 +143,88 @@ public class practice{
         }
     }
 }
+
+3) Check if a string is palindrome
+   ==============================
+
+   public class practice{
+    static boolean f(int i, String s,int n)
+    {
+        if(i>=n/2){
+            return true;
+        }
+        if(s.charAt(i)!=s.charAt(n-i-1)){
+            return false;
+        }
+        return f(i+1,s,n);
+    }
+    public static void main(String[] args) {
+        String s = "madam";
+        System.out.println(f(0,s,s.length()));
+    }
+}
+
+return f(i + 1, s); means whatever the recursive call returns (true or false), the current function returns the same value to its caller.
+
+Multiple Recursion Calls
+=========================
+
+q) nth Fibonacci number
+
+code: public class practice{
+    static int f(int n)
+    {
+        if(n<=1) return n;
+        int last = f(n-1);
+        int slast = f(n-2);
+        return last+slast;
+    }
+    public static void main(String[] args) {
+        System.out.println(f(2));
+    }
+}
+
+T.C. -> 2^n (exponential)
+
+Print all Subsequences
+=======================
+
+                        A contiguous or non-contiguous sequence, which follows the order.
+
+
+code: import java.util.*;
+public class practice{
+    static void print(int ind,int[] arr,ArrayList<Integer> list,int n)
+    {
+        if(ind>=n){
+            System.out.println(list);
+            return;
+        }
+        list.add(arr[ind]);
+        print(ind+1,arr,list,n);//take
+        list.removeLast();
+        print(ind+1,arr,list,n);//not take
+    }
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList();
+        int[] arr = {3,1,2};
+        int n = arr.length;
+        print(0,arr,list,n);
+    }
+}                        
+
+Classical example to understand this stuff: trial room mein ek kapda try karna hai toh jo pehne ho usko utarna hoga aur agar dusra try karna hoga toh jo abhi pehne ho usko utarna hoga
+
+T.C. -> O(2^n) (exponential)
+S.C. -> O(n)
+
+
+
+
+
+
+
+
+
+
 
