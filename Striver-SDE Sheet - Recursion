@@ -219,6 +219,43 @@ T.C. -> O(2^n) (exponential)
 S.C. -> O(n)
 
 
+Print all Subsequences whose sum is K
+=====================================
+
+code: import java.util.*;
+public class practice{
+    static void f(int i, ArrayList<Integer> ans,int s,int sum,int[] arr,int n)
+    {
+        if(i==n)
+        {
+            if(s==sum){
+                System.out.println(ans);
+            }
+            return;
+        }
+        ans.add(arr[i]);
+        s+=arr[i];
+        f(i+1,ans,s,sum,arr,n);
+        ans.removeLast();
+        s-=arr[i];
+        f(i+1,ans,s,sum,arr,n);
+    }
+    public static void main(String[] args) {
+        int[] arr = {1,2,1};
+        int n = arr.length;
+        int sum = 2;
+        ArrayList<Integer> ans = new ArrayList<>();
+        f(0,ans,0,sum,arr,n);
+    }
+}
+
+
+
+
+
+
+
+
 
 
 
