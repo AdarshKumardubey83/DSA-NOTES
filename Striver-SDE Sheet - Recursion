@@ -93,7 +93,7 @@ public class practice {
         return n + f(n-1);
     }
     public static void main(String[] args) {
-        int n = 4;
+        int n = 4; 
         System.out.println(f(n));
     }
 }
@@ -249,9 +249,116 @@ public class practice{
     }
 }
 
+Print any one subsequence whose sum is sum
+===========================================
+
+Technique to print one answer :
+
+bool f()
+{
+    base case 
+      if condn satisfied
+      return true
+      if condn not satisfied
+      return false
+
+  if(f()=true) return true; //no need to go beyond 
+
+     f()   
+    return false;    
+}
 
 
 
+code: import java.util.*;
+public class practice{
+    static boolean f(int i, ArrayList<Integer> ans,int s,int sum,int[] arr,int n)
+    {
+        if(i==n)
+        {
+            //condition satisfied
+            if(s==sum){
+                System.out.println(ans);
+                return true;
+            }
+            //condition not satisfied
+            else return false;
+        }
+        ans.add(arr[i]);
+        s+=arr[i];
+        if(f(i+1,ans,s,sum,arr,n)==true){
+            return true;
+        }
+        ans.removeLast();
+        s-=arr[i];
+        if(f(i+1,ans,s,sum,arr,n)==true){
+            return true;
+        }
+        return false;
+    }
+    public static void main(String[] args) {
+        int[] arr = {1,2,1};
+        int n = arr.length;
+        int sum = 2;
+        ArrayList<Integer> ans = new ArrayList<>();
+        f(0,ans,0,sum,arr,n);
+    }
+}
+
+note: any one subsequence will be printed we can't print any particular subsequence 
+
+
+Count the subsequences with sum = k
+====================================
+
+Simple trick for this:
+
+int f()
+{
+
+    base case 
+      if condn satisfied
+      return 1
+      if condn not satisfied
+      return 0
+
+      l=f()
+      r=f()
+
+  return l + r; //counting all the subsequences
+}
+
+
+import java.util.*;
+public class practice{
+    static int f(int i,int s,int sum,int[] arr,int n)
+    {
+        if(i==n)
+        {
+            //condition satisfied
+            if(s==sum) return 1;
+            //condition not satisfied
+            else return 0;
+        }
+        s+=arr[i];
+        int l= f(i+1,s,sum,arr,n);
+        s-=arr[i];
+        int r = f(i+1,s,sum,arr,n);
+        return l+r;
+    }
+    public static void main(String[] args) {
+        int[] arr = {1,2,1};
+        int n = arr.length;
+        int sum = 2;
+        int ans = f(0,0,sum,arr,n);
+        System.out.println(ans);
+    }
+}
+
+T.C. -> For every index we have 2 choices (take or not take) so O(2^n)
+
+Merge Sort
+===========
 
 
 
