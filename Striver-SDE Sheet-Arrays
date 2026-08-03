@@ -567,6 +567,8 @@ code: class Solution {
         return false;
     }
 }
+T.C. -> O(N log N) for sorting + O(N) for two pointer traversal
+S.C. -> O(1) as we are not using any extra space except for variables to store indices and pointers.
 
 2) 3Sum: 
 
