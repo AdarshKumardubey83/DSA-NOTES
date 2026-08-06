@@ -62,6 +62,9 @@ code: public class practice{
 2)Implementation of Queue using Arrays
 ======================================
 
+Start and end are maintaining your start and end of the queue. currSize is maintaining the current size of the queue. If currSize==size then queue is full, if currSize==0 then queue is empty.
+Start aur end ke bich mein mera queue hai
+
 public class practice{
     int size = 10;
     int[] queue = new int[size];
@@ -77,7 +80,7 @@ public class practice{
             end = 0;
         }
         else{
-            end = (end+1)%size;
+            end = (end+1)%size; // here this formula is used to make the array circular, so that we can use the empty space in the front of the array when we pop the elements from the front of the queue.
         }
 
         queue[end]=x;
@@ -96,7 +99,7 @@ public class practice{
             end=-1;
         }
         else{
-            start=(start+1)%size;
+            start=(start+1)%size; // here this formula is used to make the array circular, so that we can use the empty space in the front of the array when we pop the elements from the front of the queue.
         }
         currSize-=1;
         return el;
@@ -232,7 +235,7 @@ class MyQueue {
     }
 }
 
-Amortized time complexity approach using two stacks I will do later
+
 
 5) Balanced Parenthesis
 
@@ -314,3 +317,7 @@ Optimal Approach : class Solution {
 
 T.C. -> O(2N)
 S.C. -> O(N) + O(N)
+
+LRU Cache
+=========
+
