@@ -318,6 +318,64 @@ Optimal Approach : class Solution {
 T.C. -> O(2N)
 S.C. -> O(N) + O(N)
 
+Next Smaller Element: 
+====================
+
+Brute Force Approach : class Solution {
+    static ArrayList<Integer> nextSmallerEle(int[] arr) {
+        // code here
+        ArrayList<Integer> nse = new ArrayList<>();
+        int n = arr.length;
+        for(int i=0;i<n;i++)
+        {
+            boolean flag = false;
+            for(int j=i+1;j<n;j++)
+            {
+                if(arr[j]<arr[i])
+                {
+                    nse.add(arr[j]);
+                    flag = true;
+                    break;
+                }
+            }
+            if(flag == false){
+                nse.add(-1);
+            }
+        }
+        return nse;
+    }
+}
+
+T.C. -> O(N^2)
+S.C. -> O(N) but it is used to store the ans, so this can't be improved.
+
+Optimal Approach : class Solution {
+    static ArrayList<Integer> nextSmallerEle(int[] arr) {
+        // code here
+        ArrayList<Integer> nse = new ArrayList<>();
+        Stack<Integer> st = new Stack<>();
+        int n = arr.length;
+        for(int i=n-1;i>=0;i--)
+        {
+            while(!st.isEmpty() && st.peek()>=arr[i])
+            {
+                st.pop();
+            }
+            if(st.isEmpty()) nse.add(-1);
+            else nse.add(st.peek());
+            st.push(arr[i]);
+        }
+        Collections.reverse(nse);
+        return nse;
+    }
+}
+
+T.C. -> O(2N)
+S.C. -> O(N) + O(N)
+
+
+
+
 LRU Cache
 =========
 
@@ -515,4 +573,97 @@ code: class LFUCache {
  * int param_1 = obj.get(key);
  * obj.put(key,value);
  */
+
+Largest Rectangle in Histogram
+===============================
+
+Brute Force Approach: area nikalna hai toh , area wahi tak banega jaha tak mere se piche bhi bade ho aur mere se aage bhi bade ho , toh uske liye mujhe pse pata hona chahiye
+                      aur nse pata hona chahiye , toh area wahi tak banega aur pse aur nse mein index store karenge kyuki hume area(Width) chahiye taki hum area of rectangle nikal sake.
+                      bas itna pata chal gaya toh logic done kyuki main doubt hota hai ki pata kaise chale ki kaha tak area banega.
+
+code: class Solution {
+    int[] nse(int[] arr)
+    {
+        int n = arr.length;
+        int[] ans = new int[n];
+        Stack<Integer> st = new Stack<>();
+        for(int i=n-1;i>=0;i--)
+        {
+            while(!st.isEmpty() && arr[st.peek()]>=arr[i])
+            {
+                st.pop();
+            }
+            if(st.isEmpty()) ans[i] = n;
+            else ans[i] = st.peek();
+            st.push(i);
+        }
+        return ans;
+    }
+    int[] pse(int[] arr)
+    {
+        int n = arr.length;
+        int[] ans = new int[n];
+        Stack<Integer> st = new Stack<>();
+        for(int i=0;i<n;i++)
+        {
+            while(!st.isEmpty() && arr[st.peek()]>=arr[i])
+            {
+                st.pop();
+            }
+            if(st.isEmpty()) ans[i] = -1;
+            else ans[i] = st.peek();
+            st.push(i);
+        }
+        return ans;
+    }
+    public int largestRectangleArea(int[] heights) {
+        int[] nse = nse(heights);
+        int[] pse = pse(heights);
+        int n = heights.length;
+        int maxArea = Integer.MIN_VALUE;
+        for(int i=0;i<n;i++)
+        {
+            int area = nse[i]-pse[i]-1;
+            maxArea = Math.max(maxArea,heights[i]*area);
+        }
+        return maxArea;
+    }
+}
+
+T.C. -> O(5N)
+S.C. -> O(2N) + O(2N) + O(1) = O(4N)  
+
+Optimal Approach: 
+
+
+
+Sliding Window Maximum
+======================
+
+Brute Force Approach: jo jaisa dikh raha hai same wahi logic hai , window banao aur maximum nikal ke array mein insert kar do.
+
+code: class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        int[] ans = new int[n-k+1];
+        for(int i=0;i<=n-k;i++)
+        {
+            int max = Integer.MIN_VALUE;
+            for(int j=i;j<i+k;j++)
+            {
+                max = Math.max(max,nums[j]);
+            }
+            ans[i] = max;
+        }
+        return ans;
+    }
+}
+
+T.C. -> O(N-K)*k
+S.C. -> O(N-K+1) for ans array
+
+Optimal Approach: 
+Intution: ab jo brute force tha woh O(N^2) something tak le raha tha toh nested loop se toh ek loop mein aana padega, 
+          toh: -> k elements , keep the window elements
+               -> monotonic stack : aur ye pata kaise laga ki monotonic stack use hoga , toh abhi ke liye just a small trick : whenever we need the greatest or smallest in constant complexity
 

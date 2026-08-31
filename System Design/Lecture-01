@@ -1,0 +1,955 @@
+Vertical Scaling :
+=================
+
+Vertical scaling (Scaling Up) means increasing the power of a single server to handle more workload.
+
+For example, suppose your backend is running on a server with:
+
+4 GB RAM
+2 CPU cores
+100 GB storage
+
+If traffic increases, instead of adding another server, you upgrade the same server to:
+
+16 GB RAM
+8 CPU cores
+500 GB storage
+
+That's vertical scaling.
+
+Easy Hinglish
+
+Vertical scaling = ek hi server ko aur powerful banana.
+
+Horizontal Scaling
+====================
+
+Horizontal scaling (Scaling Out) means adding more servers/machines to handle increased traffic instead of making one server more powerful.
+
+Easy Hinglish
+
+Horizontal scaling = ek server ko powerful banane ke bajay, multiple servers add karna.
+
+
+# System Design
+
+## 1. Start from the basic problem
+
+Suppose our application has only one backend server:
+
+```
+User
+ ↓
+Backend Server
+```
+
+As traffic increases, we horizontally scale:
+
+```
+Server A
+Server B
+Server C
+```
+
+Now a new problem appears:
+
+> When a request arrives, which server should receive it?
+> 
+
+That is where a **Load Balancer** comes in.
+
+```
+                 ┌── Server A
+User → LB ───────┼── Server B
+                 └── Server C
+```
+
+The load balancer receives incoming requests and decides which healthy backend server should process each request.
+
+---
+
+# 2. Common Load Balancing Strategies
+
+## Round Robin
+
+Requests are distributed one by one:
+
+```
+R1 → A
+R2 → B
+R3 → C
+R4 → A
+R5 → B
+R6 → C
+```
+
+Good when:
+
+- servers have similar hardware
+- requests have roughly similar cost
+
+Problem:
+
+```
+A → busy with expensive request
+B → idle
+C → idle
+```
+
+Round Robin may still send another request to A.
+
+---
+
+## Weighted Round Robin
+
+Suppose:
+
+```
+A = 16 CPU cores
+B = 8 CPU cores
+C = 4 CPU cores
+```
+
+We shouldn't give equal traffic.
+
+Assign weights:
+
+```
+A → 4
+B → 2
+C → 1
+```
+
+Approximately:
+
+```
+7 requests
+
+A → 4
+B → 2
+C → 1
+```
+
+Use when servers have different capacities.
+
+---
+
+## Least Connections
+
+Choose the server with the fewest active connections.
+
+```
+A → 100 connections
+B → 20 connections
+C → 70 connections
+```
+
+New request:
+
+```
+→ B
+```
+
+Useful when request processing times differ greatly.
+
+Example:
+
+```
+GET /profile      → 10 ms
+POST /generate    → 20 seconds
+```
+
+---
+
+## IP Hash / Sticky Session
+
+Calculate something based on client IP:
+
+```
+hash(clientIP)
+       ↓
+Server B
+```
+
+The same client tends to reach the same server.
+
+Useful when state/session is stored locally on a server.
+
+Example:
+
+```
+Rohit → Server B
+Rohit → Server B
+Rohit → Server B
+```
+
+But this creates problems when B dies.
+
+A cleaner architecture is usually:
+
+```
+Backend servers = stateless
+```
+
+and shared state lives in something like:
+
+```
+Database
+Redis
+```
+
+---
+
+## Geographic Routing
+
+Suppose servers exist in:
+
+```
+Mumbai
+Singapore
+London
+Virginia
+```
+
+Then:
+
+```
+Delhi user → Mumbai
+Paris user → London
+US user → Virginia
+```
+
+The idea is to reduce network latency.
+
+This is often part of **global traffic routing**, not just the small regional load balancer sitting in front of backend servers.
+
+---
+
+# 3. How does the user find the Load Balancer?
+
+Suppose the user opens:
+
+```
+api.coderarmy.com
+```
+
+The browser doesn't normally know your backend IPs.
+
+Flow:
+
+```
+User
+ ↓
+DNS
+ ↓
+Load Balancer's public entry point
+ ↓
+Load Balancer
+ ↓
+Backend
+```
+
+Conceptually:
+
+```
+api.coderarmy.com
+        ↓
+       DNS
+        ↓
+Public IP / hostname
+        ↓
+Load Balancer
+        ↓
+Server A/B/C
+```
+
+---
+
+# 4. Can a Load Balancer have an IP?
+
+Yes.
+
+Suppose you create your own NGINX load balancer on a VM:
+
+```
+NGINX Load Balancer
+Public IP = 3.110.20.50
+```
+
+DNS could contain:
+
+```
+api.coderarmy.com
+        ↓
+3.110.20.50
+```
+
+Client then connects to:
+
+```
+3.110.20.50
+```
+
+---
+
+# 5. Problem: One Load Balancer is also a Single Point of Failure
+
+Architecture:
+
+```
+             Load Balancer
+                  ↓
+          Server A/B/C
+```
+
+What happens if the load balancer dies?
+
+```
+User
+ ↓
+LB ❌
+ ↓
+Nobody can reach servers
+```
+
+So in production, the load-balancing layer itself should also be redundant.
+
+---
+
+# 6. Can we have multiple Load Balancers?
+
+Absolutely.
+
+```
+                     ┌── LB1 ──→ Backend Servers
+User ────────────────┤
+                     └── LB2 ──→ Backend Servers
+```
+
+Now the natural question is:
+
+> If we needed a load balancer to choose between backend servers, who chooses between LB1 and LB2?
+> 
+
+This leads to another layer of traffic management.
+
+---
+
+# 7. DNS can return multiple IP addresses
+
+Suppose:
+
+```
+LB1 = Public IP 1
+LB2 = Public IP 2
+LB3 = Public IP 3
+```
+
+DNS might return:
+
+```
+api.example.com
+   ↓
+
+IP1
+IP2
+IP3
+```
+
+Conceptually:
+
+```
+              DNS
+          /    |    \
+        IP1   IP2   IP3
+         ↓     ↓     ↓
+        LB1   LB2   LB3
+```
+
+This is one way of having multiple entry points.
+
+However, DNS is not the same thing as a normal per-request load balancer because DNS results can be cached by:
+
+- OS
+- browser
+- ISP/resolver
+
+---
+
+# 8. Managed Load Balancer
+
+With AWS/Azure/GCP, you normally don't think:
+
+```
+Load Balancer = one EC2 machine
+```
+
+Instead the cloud provider gives you a logical service.
+
+For example:
+
+```
+my-app.elb.amazonaws.com
+```
+
+Your domain can point toward it:
+
+```
+api.coderarmy.com
+        ↓
+my-app.elb.amazonaws.com
+```
+
+Internally:
+
+```
+              Managed Load Balancer
+               /                 \
+          LB Node 1           LB Node 2
+              ↓                   ↓
+         Backend A/B          Backend C/D
+```
+
+So the box:
+
+```
+[Load Balancer]
+```
+
+in a system design diagram does **not necessarily mean one physical machine**.
+
+It can represent an entire distributed service.
+
+---
+
+# 9. Global vs Regional Load Balancing
+
+At large scale, you may actually have two levels.
+
+```
+                     User
+                      ↓
+              Global Routing
+                 /         \
+                ↓           ↓
+           India Region    US Region
+                ↓           ↓
+          Regional LB    Regional LB
+           / |  \          / | \
+          A  B   C        D  E  F
+```
+
+## Global layer decides:
+
+> Which region/data center should handle this user?
+> 
+
+Example:
+
+```
+Delhi → Mumbai
+California → Virginia/West Coast
+```
+
+## Regional load balancer decides:
+
+> Which backend server inside this region?
+> 
+
+Example:
+
+```
+Mumbai LB
+   ↓
+Server A/B/C
+```
+
+---
+
+# 10. Understanding `nslookup google.com`
+
+Suppose you run:
+
+```bash
+nslookup google.com
+```
+
+and receive:
+
+```
+google.com → 192.178.134.102
+google.com → 192.178.134.100
+google.com → 192.178.134.113
+google.com → 192.178.134.138
+google.com → 192.178.134.139
+google.com → 192.178.134.101
+```
+
+Why are there multiple IPs?
+
+Because:
+
+> **One domain name can have multiple A records.**
+> 
+
+An A record maps:
+
+```
+hostname → IPv4 address
+```
+
+So:
+
+```
+google.com
+    ↓
+IP1
+IP2
+IP3
+IP4
+IP5
+IP6
+```
+
+This provides multiple network entry points.
+
+---
+
+# 11. Very important: 6 IPs does NOT mean 6 backend servers
+
+Wrong mental model:
+
+```
+IP1 = Server 1
+IP2 = Server 2
+IP3 = Server 3
+```
+
+Not necessarily.
+
+One public IP may lead to a huge infrastructure behind it:
+
+```
+192.178.134.102
+        ↓
+Google frontend infrastructure
+        ↓
+Load balancing
+        ↓
+Thousands of internal servers
+```
+
+So:
+
+> **An IP address is an entry point, not necessarily one physical computer.**
+> 
+
+This is an extremely important system-design concept.
+
+---
+
+# 12. DNS and Load Balancing can work together
+
+A large architecture can conceptually look like:
+
+```
+                    google.com
+                        ↓
+                       DNS
+                        ↓
+              Multiple Public IPs
+             /         |         \
+            ↓          ↓          ↓
+        Frontend    Frontend    Frontend
+            \          |          /
+             \         |         /
+              Load balancing
+                    ↓
+             Backend fleet
+```
+
+There can therefore be multiple levels of distribution.
+
+### Layer 1
+
+DNS gives you one or more public entry points.
+
+### Layer 2
+
+The infrastructure behind that IP determines which actual machine/service handles the request.
+
+---
+
+# 13. Public IP vs Private IP
+
+This caused an important confusion.
+
+You saw:
+
+```
+192.178.134.102
+```
+
+and thought it might be private because it starts with `192`.
+
+But **not every `192.x.x.x` address is private.**
+
+Private IPv4 ranges are specifically:
+
+```
+10.0.0.0
+to
+10.255.255.255
+```
+
+```
+172.16.0.0
+to
+172.31.255.255
+```
+
+```
+192.168.0.0
+to
+192.168.255.255
+```
+
+Remember:
+
+```
+10.x.x.x         → Private
+
+172.16.x.x
+...
+172.31.x.x       → Private
+
+192.168.x.x      → Private
+```
+
+---
+
+# 14. Therefore this is private
+
+```
+192.168.1.10
+```
+
+because it lies inside:
+
+```
+192.168.0.0/16
+```
+
+---
+
+# But this is public
+
+```
+192.178.134.102
+```
+
+because:
+
+```
+192.178 ≠ 192.168
+```
+
+So:
+
+```
+192.168.x.x  → private
+
+192.178.x.x  → not in private range
+```
+
+That `192.178.134.102` address returned for Google is publicly routable.
+
+---
+
+# 15. Why do backend servers often use private IPs?
+
+Suppose:
+
+```
+Internet
+   ↓
+Load Balancer
+Public IP:
+3.110.20.50
+```
+
+Behind it:
+
+```
+Server A → 10.0.1.10
+Server B → 10.0.1.11
+Server C → 10.0.1.12
+```
+
+Architecture:
+
+```
+                     INTERNET
+
+                        ↓
+
+              Public Load Balancer
+                 3.110.20.50
+                        ↓
+              ┌─────────┼─────────┐
+              ↓         ↓         ↓
+          10.0.1.10 10.0.1.11 10.0.1.12
+          Server A  Server B   Server C
+
+                    PRIVATE NETWORK
+```
+
+Internet users only need to know the public entry point.
+
+They do not need direct access to backend servers.
+
+This is better for:
+
+- security
+- network isolation
+- centralized routing
+- easier scaling
+
+---
+
+# 16. Public IP does not mean one machine
+
+This is another key idea.
+
+Suppose:
+
+```
+google.com
+↓
+192.178.134.102
+```
+
+Do **not** think:
+
+```
+192.178.134.102
+=
+one Google computer
+```
+
+Think:
+
+```
+192.178.134.102
+=
+a network entry point
+```
+
+Behind that could be:
+
+```
+Public IP
+    ↓
+Network infrastructure
+    ↓
+Load balancer/frontends
+    ↓
+Thousands of services
+```
+
+---
+
+# 17. Why did `nslookup` say `8.8.8.8`?
+
+Your output showed:
+
+```
+Server: 8.8.8.8
+Address: 8.8.8.8#53
+```
+
+That means:
+
+```
+Your computer
+     ↓
+Google Public DNS
+8.8.8.8
+```
+
+You asked `8.8.8.8`:
+
+> What is the IP address of `google.com`?
+> 
+
+`8.8.8.8` acted as your **recursive DNS resolver**.
+
+---
+
+# 18. What does `Non-authoritative answer` mean?
+
+You also saw:
+
+```
+Non-authoritative answer:
+```
+
+That means:
+
+```
+8.8.8.8
+```
+
+is not the authoritative DNS server that owns the `google.com` zone.
+
+Conceptual DNS flow:
+
+```
+Your Laptop
+    ↓
+8.8.8.8
+Recursive Resolver
+    ↓
+Root DNS
+    ↓
+.com TLD
+    ↓
+google.com Authoritative DNS
+    ↓
+A Records
+    ↓
+8.8.8.8
+    ↓
+Your Laptop
+```
+
+Because `8.8.8.8` is answering on behalf of the authoritative system, `nslookup` displays:
+
+```
+Non-authoritative answer
+```
+
+---
+
+# 19. One final architecture to remember
+
+A realistic large-scale mental model is:
+
+```
+                        User
+                          ↓
+                         DNS
+                          ↓
+                Public Entry Point(s)
+                          ↓
+                Global Load Balancing
+                          ↓
+            ┌─────────────┴─────────────┐
+            ↓                           ↓
+       India Region                 US Region
+            ↓                           ↓
+      Regional Load Balancer      Regional Load Balancer
+         /    |    \                 /    |    \
+        ↓     ↓     ↓               ↓     ↓     ↓
+      App1  App2  App3            App4  App5  App6
+        ↓     ↓     ↓
+        Private IPs
+```
+
+The backend servers can remain completely private.
+
+---
+
+# Most Important Interview Takeaways
+
+### 1.
+
+```
+Load Balancer
+≠
+necessarily one machine
+```
+
+It is often a **logical distributed service**.
+
+### 2.
+
+```
+Domain
+→ can resolve to multiple IPs
+```
+
+### 3.
+
+```
+One public IP
+≠
+one physical server
+```
+
+It can represent a massive frontend infrastructure.
+
+### 4.
+
+Multiple load balancers are normal:
+
+```
+LB1
+LB2
+LB3
+```
+
+Otherwise the LB itself becomes a single point of failure.
+
+### 5.
+
+Private IP ranges are specifically:
+
+```
+10.0.0.0/8
+
+172.16.0.0/12
+
+192.168.0.0/16
+```
+
+Therefore:
+
+```
+192.168.1.1     → Private ✅
+
+192.178.134.102 → Public ✅
+```
+
+### 6.
+
+The most useful mental model is:
+
+```
+Domain
+  ↓
+DNS
+  ↓
+Public entry point
+  ↓
+Load-balancing infrastructure
+  ↓
+Private backend servers
+```
+
+That is much closer to how you should think about a production system than:
+
+```
+domain → one IP → one server
+```
+
+
+Load Balancers — how traffic gets distributed and why round-robin isn't enough
+ Databases — the real bottleneck in every system
+Sharding — splitting data when one DB can't hold it
+Replication & Read Replicas — surviving failure and scaling reads
+CDN — serving content fast, globally
+S3 / Object Storage — where the heavy files actually live
+Redis — caching and why it changes everything
+Kafka — handling scale with async, event-driven design
+Microservices — breaking the monolith the right way
