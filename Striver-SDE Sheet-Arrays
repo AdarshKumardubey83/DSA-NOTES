@@ -489,7 +489,7 @@ Cycle ka entry point = duplicate number
 “Circular track pe fast slow ko pakad lega. Phir start aur meeting point se same speed se chalne par dono cycle ke entry point pe milte hain — wahi duplicate hai.”
 
 
-Arrays Part-3
+Arrays Part-3(Arrays/Maths)
 ==============
 
 1) Search in a 2D Matrix
@@ -522,7 +522,61 @@ T.C. -> O(N*M) , where N is the number of rows and M is the number of columns in
 S.C. -> O(1) as we are not using any extra space except for variables
 
 
+Better Approach: we are doing nesting of loops , so ek loop hatana padega
+array pehle se sorted hai toh us particular row mein search kao jis row mein target ho sakta hai , uske baad us row mein binary search karo
 
+code: class Solution {
+    boolean binarySearch(int[] arr , int target)
+    {
+        int low = 0,high = arr.length-1;
+        while(low<=high)
+        {
+            int mid = (low+high)/2;
+            if(arr[mid]==target) return true;
+            else if(arr[mid]>target) high = mid-1;
+            else low = mid+1;
+        }
+        return false;
+    }
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        for(int i = 0; i<n; i++)
+        {
+            if(target>=matrix[i][0] && target<=matrix[i][m-1])
+            {
+                return binarySearch(matrix[i],target);
+            }
+        }
+        return false;
+    }
+}
+
+T.C. O(N) + (log M) , where N is the number of rows and M is the number of columns in the matrix.
+S.C. O(1) as we are not using any extra space except for variables
+
+Optimal Approach: 2D matrix ko 1D array ki tarah treat karo , aur uske baad binary search karo
+One thing to keep in mind that 1d is hypothetical that's why we have to convert 1d index into 2d index using formulae i = mid/m and j = mid%m , because if we convert in practical then it will take more time and space complexity
+
+
+
+Code: class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int low = 0 , high = n*m-1;
+        while(low<=high)
+        {
+            int mid = (low+high)/2;
+            if(matrix[mid/m][mid%m]==target) return true;
+            else if(target>matrix[mid/m][mid%m]) low = mid+1;
+            else high = mid-1;
+        }
+        return false;
+    }
+}
+
+T.C. -> O(log(N*M)), S.C. -> O(1)
 
 
 
