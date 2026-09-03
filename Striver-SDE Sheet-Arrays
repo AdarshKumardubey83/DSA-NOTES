@@ -578,6 +578,29 @@ Code: class Solution {
 
 T.C. -> O(log(N*M)), S.C. -> O(1)
 
+2) Pow(x,n)
+
+Brute Force Approach: multiply x n times
+
+code: class Solution {
+    public double myPow(double x, int n) {
+        long temp = n;
+        double ans = 1;
+        if(n<0)
+        {
+            x = 1/x;
+            temp = -1*n;
+        }
+        for(int i = 1;i<=temp;i++)
+        {
+            ans*=x;
+        }
+        return ans;
+    }
+}
+
+T.C. -> O(N), S.C. -> O(1) but gives TLE because n is very large upto highest integer range
+
 
 
 Arrays Part - 4
