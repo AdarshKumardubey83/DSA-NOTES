@@ -352,4 +352,228 @@ House Robber II
 
 space optimization: same house robber problem hai bas circular hai isliye 2 baar call karna padega ek baar 0 se n-2 tak aur ek baar 1 se n-1 tak aur dono ka max lena padega
 
-code: 
+code: class Solution {
+    public int rob(int[] nums) {
+        // code here
+        int n = nums.length;
+        if(n==1) return nums[0];
+        if(n==2) return Math.max(nums[0],nums[1]);
+
+        //0 to n-2(Ignore last index)
+        //1 to n-1(Ignore first index)
+
+        int[] dp = new int[3];
+        dp[0] = 0;
+        dp[1] = nums[0];
+        dp[2] = Math.max(nums[0],nums[1]);
+
+        for(int i=2;i<n-1;i++)
+        {
+            dp[0] = dp[1];
+            dp[1] = dp[2];
+            dp[2] = Math.max(nums[i]+dp[0],dp[1]);
+        }
+
+        int result = dp[2];
+
+        //we got answer for the first case: 0 to n-2
+
+        //1 to n-1
+        dp[1] = nums[1];
+        dp[2] = Math.max(nums[1],nums[2]);
+
+        for(int i=3;i<n;i++)
+        {
+            dp[0] = dp[1];
+            dp[1] = dp[2];
+            dp[2] = Math.max(nums[i]+dp[0],dp[1]);
+        }
+
+        result = Math.max(result,dp[2]);
+
+        return result;
+
+    }
+}
+
+Frog Jump with K moves
+=======================
+
+recursive code: class Solution {
+    int minEnergy(int index, int[] heights, int k)
+    {
+        if(index==0) return 0;
+
+        int result = Integer.MAX_VALUE;
+
+        for(int i=1;i<=k && i<=index; i++)
+        {
+            result = Math.min(result, Math.abs(heights[index]-heights[index-i])+minEnergy(index-i,heights,k));
+        }
+
+        return result;
+
+    }
+    public int minimizeEnergy(int[] heights, int k) {
+        // Your code 
+        int n = heights.length;
+        
+        return minEnergy(n-1,heights,k);
+    }
+}
+
+T.C. : O(k^n)  depth n hai aur har level pe k hai
+S.C. : O(n)  recursion stack ka
+
+Top-down: class Solution {
+    int minEnergy(int index, int[] heights, int k, int[] dp)
+    {
+        if(index==0) return 0;
+
+        if(dp[index]!=-1) return dp[index];
+
+        int result = Integer.MAX_VALUE;
+
+        for(int i=1;i<=k && i<=index; i++)
+        {
+            result = Math.min(result, Math.abs(heights[index]-heights[index-i])+minEnergy(index-i,heights,k,dp));
+        }
+
+        return dp[index]= result;
+
+    }
+    public int minimizeEnergy(int[] heights, int k) {
+        // Your code 
+        int n = heights.length;
+        int[] dp = new int[n];
+        Arrays.fill(dp,-1);
+        return minEnergy(n-1,heights,k,dp);
+    }
+}
+
+T.C. : O(n*k)  depth n hai aur har level pe k hai
+S.C. : O(n)  recursion stack ka + O(n) dp array ka
+
+bottom-up: class Solution {
+    public int minimizeEnergy(int[] heights, int k) {
+        // Your code 
+        int n = heights.length;
+        if(n==1) return 0;
+        int[] dp = new int[n];
+
+        dp[0] = 0;
+
+        for(int index=1;index<n;index++)
+        {
+            int result = Integer.MAX_VALUE;
+            for(int j=1;j<=k && j<=index; j++)
+            {
+            result = Math.min(result, Math.abs(heights[index]-heights[index-j])+dp[index-j]);
+            }
+            dp[index] = result;
+        }
+        return dp[n-1];
+    }
+}
+
+T.C. : O(n*k)  n bahar wala loop aur k andar wala loop
+S.C. : O(n)  dp array ka
+
+space optimization: 
+class Solution {
+    public int minimizeEnergy(int[] heights, int k) {
+        // Your code 
+        int n = heights.length;
+        if(n==1) return 0;
+
+        k = Math.min(k,n-1);    
+
+        int[] dp = new int[k+1];
+        dp[0] = 0;
+
+        //initialize first k+1 values
+
+        for(int index=1;index<=k;index++)
+        {
+            int result = Integer.MAX_VALUE;
+            for(int j=1;j<=k && j<=index; j++)
+            {
+            result = Math.min(result, Math.abs(heights[index]-heights[index-j])+dp[index-j]);
+            }
+            dp[index] = result;
+        }
+
+        for(int index=k+1;index<n;index++)
+        {
+            int result = Integer.MAX_VALUE;
+
+            // saare value ko ek ek place aage shift karo
+            for(int i=1;i<=k;i++){
+                dp[i-1] = dp[i];
+            }
+
+
+            for(int j=1;j<=k && j<=index; j++)
+            {
+            result = Math.min(result, Math.abs(heights[index]-heights[index-j])+dp[k-j]);
+            }
+            dp[k] = result;
+        }
+        return dp[k];
+    }
+}
+
+2D DP: 2D DP ka matlab hai ki humare paas 2 variables hai jo change ho rahe hai aur unke hisaab se answer nikalna hai
+=====
+
+Subset Sum Problem: 
+
+recursive : class Solution {
+    boolean findSubset(int index , int k, int[] arr)
+    {
+        if(k==0) return true;
+        if(index<0) return false;
+
+        //pick or not pick
+        return findSubset(index-1,k,arr) || findSubset(index-1,k-arr[index],arr);
+    }
+    public boolean subsetSumToK(int n, int k, int[] arr) {
+        // Your code here
+        return findSubset(n-1,k,arr);
+    }
+}
+
+T.C. : O(2^n)  depth n hai aur har level pe 2 hai
+S.C. : O(n)  recursion stack ka
+
+Top-down: class Solution {
+
+    boolean findSubset(int index, int k, int[] arr, int[][] dp)
+    {
+        if(k == 0) return true;
+        if(index < 0 || k < 0) return false;
+
+        if(dp[index][k] != -1) {
+            return dp[index][k] == 1;
+        }
+
+        boolean result = findSubset(index - 1, k, arr, dp)
+                      || findSubset(index - 1, k - arr[index], arr, dp);
+
+        dp[index][k] = result ? 1 : 0;
+
+        return result;
+    }
+
+    public boolean subsetSumToK(int n, int k, int[] arr) {
+
+        int[][] dp = new int[n][k + 1];
+
+        for(int i = 0; i < n; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+
+        return findSubset(n - 1, k, arr, dp);
+    }
+}
+
