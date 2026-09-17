@@ -640,3 +640,10 @@ bottom-up: class Solution {
     }
 }
 
+T.C.  : O(n*k)  depth n hai aur har level pe k hai
+S.C.  : O(n*k)  2D dp array ka
+
+space optimization: ab hume sirf pichle row ki values ki jarurat hai toh 2D array ka need nhi hai
+                    we need only 2 rows to store the previous and current results. We can use a 1D array to optimize space. so 2 arrays is needed.
+
+code:                     

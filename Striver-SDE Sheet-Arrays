@@ -36,7 +36,7 @@ code: class Solution {
             {
                 if(matrix[i][j]==0)
                 {
-                    markrow(matrix,i,m);    ---> O(n)
+                    markrow(matrix,i,m);    ---> O(m)
                     markcol(matrix,j,n);    ---> O(n) 
                 }
             }
@@ -54,7 +54,7 @@ code: class Solution {
     }
 }
 
-T.C. -> O(n into m)+O(n)+O(n)+O(n into m) , it is somewhere near about power of cube
+T.C. -> O(n into m)*(n+m)+(n*m) , it is somewhere near about power of cube
 S.C. -> O(1)
 
 Better Approach : O(n^3) brute isliye ho raha hai kyuki 2D array mein traversal mein n^2 lag gaya aur har row aur column pe jake 0 mark kar rahe hai , ye extra lag raha hai, we have to eliminate this
