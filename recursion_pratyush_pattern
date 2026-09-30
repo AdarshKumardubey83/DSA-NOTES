@@ -1,0 +1,51 @@
+                                        Recursion
+                                           |
+                                           |
+                                           |
+                                           |
+                                          /  \
+                                         /     \
+                                        /        \
+                                       /           \
+                                  Sub problem       Choice/BackTracking
+                                    Trees,DP           DP,Graphs
+
+chote problem jod ke aur last chij ko jo answer banate hai usme yahi template humesha use hota hai
+
+int func(int[] arr,int n){
+    if(n==1) {
+        return arr[0];
+    }
+    int last = arr[n-1];             => base case hai aur problem ko chote problem me tod ke solve kar rahe hai, us type ka template hai ye
+    int ans = func(arr,n-1);
+    return Math.max(ans,last);
+}
+
+Backtracking
+=============
+
+Subsets
+=======
+
+code: class Solution {
+    void f(int i,int n, List<List<Integer>> ans, ArrayList<Integer> list,int[] nums)
+    {
+        if(i==n)
+        {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        list.add(nums[i]);
+        f(i+1,n,ans,list,nums);
+        list.remove(list.size()-1);
+        f(i+1,n,ans,list,nums);
+    }
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        int n = nums.length;
+        f(0,n,ans,list,nums);
+        return ans;
+    }
+}
+

@@ -128,3 +128,53 @@ code: class Solution {
 }
 
 
+6. Job Sequencing Problem
+===========================
+
+code: class Solution {
+    public int[] jobSequencing(int[] deadline, int[] profit) {
+        // code here
+        //we have to sort the array on the basis of profit
+
+        ArrayList<int[]> jobs = new ArrayList<>();
+        int n = deadline.length;
+
+        for(int i=0;i<n;i++)
+        {
+            jobs.add(new int[]{profit[i],deadline[i]});
+        }
+
+        jobs.sort(Comparator.comparingInt(a->a[0]));
+        Collections.reverse(jobs);
+
+        int[] dead = new int[n+1];
+        int totalProfit = 0, totalJobs = 0;
+
+        for(int[] arr: jobs){
+            int slot = arr[1];
+
+            while(slot>0)
+            {
+                if(dead[slot]==0) break;
+                slot--;
+            }
+
+            if(slot>0){
+                dead[slot] = 1;
+                totalJobs++;
+                totalProfit+=arr[0];
+            }
+
+        }
+
+        int[] res = new int[2];
+
+        res[0] = totalJobs;
+        res[1] = totalProfit;
+
+        return res;
+
+    }
+}
+
+T.C.-> In worst case O(N^2)

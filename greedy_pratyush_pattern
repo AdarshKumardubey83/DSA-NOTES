@@ -1,0 +1,89 @@
+Greedy -> Simple Common Sense
+Abhi jo sabse accha lag raha hai woh karo aur ant mein sab accha hoga -> like chaiwala.
+
+Greedy kab lagana hai: Abhi ka choice agar lag raha hai ki aage jake dikat hosakti hai toh mat lagaiye greedy , Aur agar aisa lag raha hai ki nhi chahe jo hojaye dikat hoga hi nhi aage jake toh greedy lagaiye
+
+1) Lemonade Change
+   ===============
+
+code: class Solution {
+    public boolean lemonadeChange(int[] bills) {
+        int n = bills.length;
+        int five = 0, ten = 0;
+        for(int i=0;i<n;i++)
+        {
+            if((bills[i]==10 || bills[i]==20) && five==0) return false; 
+            else if(bills[i]==5) five++;
+            else if(bills[i]==10)
+            {
+                if(five>0)
+                {
+                    five--;
+                    ten++;
+                }
+                else return false;
+            } 
+            else{
+                if(five>=1 && ten>=1)
+                {
+                    ten--;
+                    five--;
+                }
+                else if(five>=3)
+                {
+                    five-=3;
+                }
+                else return false;
+            }
+        }
+        return true;
+    }
+}
+
+2) Assign Cookies
+   ===============
+
+code: class Solution {
+    public int findContentChildren(int[] g, int[] s) {
+        Arrays.sort(s);
+        Arrays.sort(g);
+        int child = g.length , cookie = s.length;
+        int i=0 , j= 0 , ans = 0 ;
+        while(i<child && j<cookie)
+        {
+            if(s[j]>=g[i])
+            {
+                ans++;
+                i++;
+                j++;
+            }
+            else{
+                j++;
+            }
+            
+        }
+        return ans;
+    }
+}
+
+3) Jump Game
+   ==========
+
+code: class Solution {
+    public boolean canJump(int[] nums) {
+        int reach = 0;
+        int n = nums.length;
+        for(int i=0;i<n;i++)
+        {
+            if(reach < i) return false;
+            reach = Math.max(reach,i+nums[i]);
+            if(reach>=n-1) return true;
+        }
+        return true;
+    }
+}
+
+4) Fractional Knapsack
+   =================
+
+code:    

@@ -1,0 +1,54 @@
+Two Pointer: 2 people(pointer) milke kaam karenge toh time kam lagega, jaha pe do baar array ko traverse karna padta ya 3 baar waha pe 2 pointer time kam leta hai, lekin kaam utna hi hota hai.
+===========
+
+Lagega kaha: 1) 99% Array ya LinkedList ka hoga other mein nhi lagta bahut rare
+             2) Data Already sorted hai ya sort karne pe asani hogi 
+             3) Merge karna hai ya Remove Duplicate ya Rearrangement , Detect Cycle , Pair / triplets /Quadruplets  
+             4) Do not use extra space mentioned hai aur 2 ya 2 se jada chije find karni hai
+
+
+Note: Two pointer aur Sliding window almost ek jaisa hota hai lekin jis question mein dono use hota hai woh alag hota hai, isliye alag pattern hota hai
+
+1) Two sum mein 2 variety hoti hai ek jismein index return karna gi aur ek jismein number return karna ho, jismei index return karna hai usme two pointer nhi lagega kyuki sort kar denge toh index kho jayega
+   =======
+
+Brute Force: Traverse using two loops , TC: O(N^2)
+
+Better Approach: using hashmap , TC: O(N) and SC: O(N)
+
+Always try to use less space because space is most costier
+
+Optimal Approach: First Sort the Array and then two pointer approach
+                  T.C. : O(nlogn) for sorting and for traversing O(n) so O(nlogn) is bigger so T.C.: O(nlogn)  
+
+
+2) Remove Duplicates from Sorted Array
+   ===================================
+
+code: class Solution {
+    public int removeDuplicates(int[] nums) {
+        int n = nums.length;
+        int officer = 0 , cm = 1;
+        int res = 1;
+        while(cm<n)
+        {
+            if(nums[cm-1]!=nums[cm]) 
+            {
+                res++;
+                nums[officer+1] = nums[cm];
+                officer++;
+            }
+            cm++;
+        }
+        return res;
+    }
+}
+
+T.C. : O(N)
+
+3) Squares of a Sorted Array
+   =========================
+
+Brute Force Approach: Pehle square kar denge and then uske baad sort kar denge
+                      T.C. : Square karne ke liye : O(n) and then sorting : O(nlogn) bigger one is O(nlogn) then T.C. will be O(nlogn)
+                       
