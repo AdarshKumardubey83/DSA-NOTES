@@ -49,3 +49,52 @@ code: class Solution {
     }
 }
 
+Nth Fibonacci Number
+====================
+
+int fib(int n) {
+    if(n == 0) return 0;    
+    if(n == 1) return 1;     => Base case  
+
+    int ans1 = fib(n - 1);
+    int ans2 = fib(n - 2);   => Trust/Vishwas    
+
+    return ans1 + ans2;  => jod ke apna answer bana liya
+}
+
+
+Palindrome String
+=================
+
+boolean fun(String s , int low , int high ) {
+    int len = high - low + 1;
+    if(len ==0 || len==1) return true;  => Base case
+
+    if(s.charAt(low) != s.charAt(high)) return false;   
+
+    return fun(s , low + 1 , high - 1);  => Trust/Vishwas
+}
+
+Sum of Digits
+=================
+
+int fun(int n) {
+    
+    if(n==0) return 0;  => Base case
+
+    int last = n%10;   => last digit
+    int ans = fun(n/10);  => Trust/Vishwas
+
+    return ans + last;  => jod ke apna answer bana liya
+}
+
+Check if Array is Sorted
+========================
+
+boolean isSorted(int[] arr, int i) {
+    if(i == arr.length - 1 || i==n) return true;  => Base case
+
+    if(arr[i] > arr[i + 1]) return false;  => Trust/Vishwas
+
+    return isSorted(arr, i + 1);  => chote problem me tod ke solve kar rahe hai
+}
