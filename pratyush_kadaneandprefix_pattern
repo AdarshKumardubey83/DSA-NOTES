@@ -1,0 +1,74 @@
+when we use kadane's algorithm
+==============================
+
+1) kabhi bhi question mein subarray diya ho, aur likha ho contiguous. Aur us contiguous subarray ka aapko sum nikalna ho ya product nikalna ho ya kuch bhi nikalna ho aur best bola jaye like min or max.
+
+2) Sliding window problem: doesn't work on negative , kyuki normal case mein high ko badhate hai then sum increases and jab low ko badhate hai toh sum decreases but in negative case ye nhi pata chalta ki kab badhega aur ghatega. That's why sliding window gets fail in negative. Isliye kadane's aaya.
+
+kadane's algorithm ka thought process
+=====================================
+
+i => best ending at i , for these 2 choices
+                        1) pehle wale ke saath mil jao
+                        2) ya apne aapko rakho bas        --> in dono choices mein jo bhi accha hai, woh ban jata hai best ending      
+
+Max Sum Subarray
+================
+
+code: class Solution {
+    public int maxSubArray(int[] nums) {
+        int best = nums[0];
+        int ans = nums[0];
+        for(int i=1;i<nums.length;i++)
+        {
+            int v1 = best+nums[i];
+            int v2 = nums[i];
+            best = Math.max(v1,v2);
+            ans = Math.max(ans,best);
+        }
+        return ans;
+    }
+}
+
+Minimum Sum Subarray
+====================
+
+code: class Solution {
+    public int minSubarraySum(int[] arr) {
+        // code here
+        int best = arr[0];
+        int ans = arr[0];
+        for(int i=1;i<arr.length;i++)
+        {
+            int v1 = best+arr[i];
+            int v2 = arr[i];
+            best = Math.min(v1,v2);
+            ans = Math.min(best,ans);
+        }
+        return ans;
+    }
+}
+
+
+Maximum Product Subarray
+========================
+
+code: class Solution {
+    public int maxProduct(int[] nums) {
+        int minEnding = nums[0];
+        int maxEnding = nums[0];
+        int best = nums[0];
+        int ans = nums[0];
+        for(int i=1;i<nums.length;i++)
+        {
+            int v1 = nums[i];
+            int v2 = minEnding*nums[i];
+            int v3 = maxEnding*nums[i];
+            maxEnding = Math.max(v1,Math.max(v2,v3));
+            minEnding = Math.min(v1,Math.min(v2,v3));
+            ans = Math.max(ans,Math.max(maxEnding,minEnding));
+        }
+        return ans;
+    }
+}
+
