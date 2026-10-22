@@ -72,3 +72,68 @@ code: class Solution {
     }
 }
 
+Maximum Subarray Sum with One Deletion
+======================================
+
+code: class Solution {
+    public int maximumSum(int[] arr) {
+        int noDelete = arr[0];
+        int oneDelete = Integer.MIN_VALUE;
+        int res = arr[0];
+        for(int i=1;i<arr.length;i++)
+        {
+            int prevNoDelete = noDelete;
+            int prevOneDelete = oneDelete;
+            noDelete = Math.max(noDelete+arr[i],arr[i]);
+            int v2;
+            if(prevOneDelete == Integer.MIN_VALUE) v2 = arr[i];
+            else v2 = prevOneDelete+arr[i];
+            oneDelete = Math.max(v2,prevNoDelete);
+            res = Math.max(res,Math.max(oneDelete,noDelete));
+        }
+        return res;
+    }
+}
+
+Maximum Absolute Sum of Any Subarray
+====================================
+
+code: class Solution {
+    public int maxAbsoluteSum(int[] nums) {
+        int n = nums.length;
+        int maxSum = nums[0];
+        int minSum = nums[0];
+        int ans = Math.abs(nums[0]);
+        for(int i=1;i<n;i++)
+        {
+            int v1 = nums[i];
+            int v2 = maxSum+nums[i];
+            int v3 = minSum+nums[i];
+            maxSum = Math.max(v1,Math.max(v2,v3));
+            minSum = Math.min(v1,Math.min(v2,v3));
+            int abs1 = Math.abs(maxSum);
+            int abs2 = Math.abs(minSum);
+            ans = Math.max(ans,Math.max(abs1,abs2));
+        }
+        return ans;
+    }
+}
+
+
+How to identify the particular question is of Kadane's
+======================================================
+
+1) Array ka question hoga, string ka bhi nhi hoga(kyuki sum ya product string mein nhi nikal sakte) aur na hi linked list ka hoga.
+2) Aur kuch maximum ya minimum nikalna hoga + Sum/Product/Frequency + Optional: koi condition di ho sakti hai jaise ek delete kar sakte hai ya array circular hoga. Aur ye saari chije subarray mein, Subsequence mein nhi.
+
+Steps:
+=====
+ 
+...............(i-1),i 
+kisi index i pe jab pahuchte hai toh piche tak :(i-1) khatam hone wala best result(best result depend karega according to question, like min ya max or both or sum or product . something like that) hona chahiye                
+Ab i index pe 2 option hote hai : ya toh purane best(i-1) ke saath jud jaiye: purana best+a[i]
+                                  ya phir ek hi subarray banaiye: a[i]
+                                  aur result ko bestending se update kar dijiye
+
+best ending ka matlab : i = any index pe khatam hone wale saare subarray ka best answer 
+
