@@ -16,7 +16,7 @@ Traversal
 =========
 
 preorder: node left right  , inorder: left node right  , postorder: left right node  
-           --                               --                             --
+           --                               --                                  --
 
 Preorder ke case mein dada ji khud pehle kha lenge chocolate uske baad apne left wale child ko aur uske baad apne right wale child ko
 

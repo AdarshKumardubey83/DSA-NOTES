@@ -137,3 +137,86 @@ Ab i index pe 2 option hote hai : ya toh purane best(i-1) ke saath jud jaiye: pu
 
 best ending ka matlab : i = any index pe khatam hone wale saare subarray ka best answer 
 
+
+
+Prefix Sum Pattern
+==================
+
+Prefix sum: Prefix Sum ka matlab hai kisi array ke starting index se lekar current index tak ke elements ka sum.
+
++-----------------------+
+|   Arrays / Subarrays  |
++-----------------------+
+       |          |
+       v          v
++----------------+  +--------------------------+
+| Sum of         |  | Sum of Left / Right Pivot|
+| Subarrays      |  | / Equilibrium            |
++----------------+  +--------------------------+
+       |
+       v
++-------------------+
+| Negative Numbers  |
++-------------------+
+       |
+       +------------------------+
+       |            |           |
+       v            v           v
++----------------+ +-----------+ +-------------+
+| Sum(i...j) == K| | Shortest  | | Range Sum   |
+| OR             | | Window    | +-------------+
+| Sum(i...j) % K | | with      |        |
+| == 0           | | Sum >= K  |        v
++----------------+ +-----------+ +------------------+
+       |                 |       | Merge Sort on    |
+       v                 v       | Prefix Array     |
+  +----------+       +------+     +------------------+
+  | HashMaps |       | Deque|
+  +----------+       +------+
+
+
+
+
+
+Find Pivot Index
+=================
+
+Brute Force Approach: class Solution {
+    public int pivotIndex(int[] nums) {
+        int n = nums.length;
+        int[] prefix = new int[n];
+        int[] suffix = new int[n];
+        for(int i=1;i<n;i++)
+        {
+            prefix[i] = prefix[i-1]+nums[i-1];
+        }
+        for(int i=n-2;i>=0;i--)
+        {
+            suffix[i] = suffix[i+1]+nums[i+1];
+        }
+        for(int i=0;i<n;i++)
+        {
+            if(prefix[i]==suffix[i]) return i;
+        }
+        return -1;
+    }
+}
+
+Optimal Approach: class Solution {
+    public int pivotIndex(int[] nums) {
+        int n = nums.length;
+        int sum = 0,left=0,right=0;
+        for(int i=0;i<n;i++)
+        {
+            sum+=nums[i];
+        }
+        for(int i=0;i<n;i++)
+        {
+            right=sum-nums[i]-left;
+            if(left==right) return i;
+            left+=nums[i];
+        }
+        return -1;
+    }
+}
+
