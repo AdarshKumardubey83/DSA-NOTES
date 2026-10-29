@@ -288,13 +288,14 @@ code: class Solution {
         }
         else if(val<root.val) fun(root.left,val);
         else fun(root.right,val);
-        return;
     }
     public TreeNode searchBST(TreeNode root, int val) {
         fun(root,val);
         return ans;
     }
 }
+
+T.C.: O(Logn) , yaha pe hum har node nhi dekh rahe hai , har ek level pe ek node dekh rahe hai, that is no. of levels, kisi bhi binary tree mein no. of levels hota hai logn. Same like binary Search, yaha pe bhi har baar half subtree eliminate hojata hai either left or right.
 
 Imp point: Inorder of any Binary Search Tree is Sorted Array
 =========
