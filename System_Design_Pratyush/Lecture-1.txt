@@ -1,0 +1,210 @@
+System Design – Easy Hinglish Notes
+===================================
+1. System Design kya hai?
+System Design ek process hai jisme hum decide karte hain ki kisi software application ko kaise design, develop aur maintain kiya jayega.
+
+Isme hum decide karte hain:
+- Application ke components kya honge?
+- Components ek dusre se kaise communicate karenge?
+- Data kaha store hoga?
+- System ko fast, secure aur scalable kaise banayenge?
+Example: Agar hume Instagram jaisa application banana hai, toh uska system design decide karega ki photos kaise upload hongi, kaha store hongi aur millions of users ko kaise handle kiya jayega.
+
+2. HLD vs LLD
+System Design ke do important levels hote hain.
+HLD (High-Level Design)
+HLD mein hum system ka overall structure design karte hain.
+
+Isme decide hota hai:
+- System ke major components kya honge?
+- Kaunsi database use hogi?
+- Components aapas mein kaise communicate karenge?
+- System ka architecture kaisa hoga?
+Example: Instagram mein User Service, Post Service, Database, Cache aur Load Balancer ka design.
+LLD (Low-Level Design)
+LLD mein hum individual components ki internal working auer implementation design karte hain.
+
+Isme decide hota hai:
+- Classes aur objects kaise banenge?
+- Methods kaise kaam karenge?
+- Data structures kaunse use honge?
+- Classes ke beech relationships kya honge?
+Example: Instagram ke Post Service mein Post class, User class aur Like functionality ka design.
+
+HLD	                                       LLD
+Overall architecture	            Internal implementation
+System ke major components	        Classes, methods aur objects
+System-level decisions	            Code-level decisions
+Example: Microservices architecture	Example: Post class ka design
+
+
+Yaad rakhna: HLD batata hai ki system ke parts kaise connected hain, aur LLD batata hai ki har part internally kaise kaam karta hai.
+
+3. Functional vs Non-Functional Requirements
+Functional Requirements (FR)
+Functional requirements batati hain ki system kya-kya kaam karega.
+
+Matlab application ki features aur functionalities.
+
+Examples:
+- User login kar sake.
+- User photo upload kar sake.
+- User kisi post ko like kar sake.
+- User kisi dusre user ko follow kar sake.
+
+Non-Functional Requirements (NFR)
+Non-functional requirements batati hain ki system kitni achhi tarah kaam karega.
+
+Examples:
+- Application fast honi chahiye.
+- System millions of users ko handle kar sake.
+- User ka data secure hona chahiye.
+- System highly available hona chahiye.
+Functional Requirements	Non-Functional Requirements
+System kya karega?	System kaise perform karega?
+Features aur functionality	Quality attributes
+Login, signup, upload	Speed, security, scalability
+
+
+Example:
+Instagram mein photo upload karna functional requirement hai.
+
+Photo 2 seconds ke andar upload ho jaye, ye non-functional requirement hai.
+
+
+
+4. Nine Important Quality Attributes:
+
+System design mein ye 9 qualities bahut important hain.
+
+1. Scalability/load
+Scalability ka matlab hai users ya workload increase hone par system apni capacity increase kar sake.
+
+Example: Pehle Instagram par 1 lakh users the, ab 1 crore users ho gaye. System ko itne users handle karne ke liye scale karna padega.
+
+Types:
+- Vertical Scaling: Existing server ki capacity increase karna.
+- Horizontal Scaling: Multiple servers add karna.
+
+2. Performance/latency
+Performance batati hai ki system kitni fast response deta hai aur kitna workload handle kar sakta hai.
+
+Example: User Instagram open kare aur feed quickly load ho jaye.
+
+Important metrics:
+- Latency: Ek request ka response aane mein kitna time laga.
+- Throughput: Ek second mein kitni requests process hui.
+
+
+3. Availability
+Availability ka matlab hai system kitne time tak users ke liye accessible aur operational hai.
+
+Example: Agar Instagram 99.99% time available hai, toh system bahut kam time ke liye down hota hai.
+
+High availability ke liye:
+- Multiple servers
+- Backup systems
+- Failover mechanisms
+
+
+4. Reliability/fault tolerance
+Reliability ka matlab hai system consistently aur correctly kaam kare, bina unexpected failures ke. 
+
+Example: User photo upload kare aur photo successfully save ho jaye, bina data corrupt hue.
+
+fault tolerance ka matlab hota hai agar 10 server hai, aur ek server khatam hogaya tabhi system chalta rehna chahiye. Aisa nhi hona chahiye ki ek server band hogaya toh duniye mein jitne websites hai aapke, woh sab band hogaye.
+
+Availability vs Reliability:
+- Availability: System accessible hai ya nahi?
+- Reliability: System correctly kaam kar raha hai ya nahi?
+
+5. Consistency
+Consistency ka matlab hai system ke different parts ya replicas par data ki value ek agreed rule ke according correct aur updated rahe.
+
+Example: User ne apna profile name change kiya, toh system ke different parts mein updated name dikhna chahiye.
+
+Distributed systems mein consistency ke different levels hote hain. Har system ko har situation mein immediate consistency ki zarurat nahi hoti.
+
+6. Durability
+Durability ka matlab hai ek baar data successfully save ho gaya, toh system failure ke baad bhi data lost nahi hona chahiye.
+
+Example: User ne Instagram par photo upload ki. Server restart hone ke baad bhi photo available rehni chahiye.
+
+Durability ke liye:
+- Data replication
+- Backups
+- Persistent storage
+
+7. Security
+Security ka matlab hai system ko unauthorized access, attacks aur data theft se protect karna.
+
+Example: Instagram par kisi user ka private account aur personal data unauthorized users access nahi kar sakein.
+
+Important techniques:
+- Authentication
+- Authorization
+- Encryption
+- Rate limiting
+
+
+8. Cost
+Cost ka matlab hai system ko develop, deploy aur maintain karne mein kitna paisa lag raha hai.
+
+Isme include hota hai:
+- Servers
+- Database
+- Cloud storage
+- Network
+- Maintenance
+Example: Agar har request ke liye expensive server use karenge, toh system ka cost increase ho jayega.
+
+Goal: Required performance aur reliability achieve karna with reasonable cost.
+
+
+9. Maintainability
+Maintainability ka matlab hai system ko future mein easily update, debug aur improve kiya ja sake.
+
+Example: Instagram mein new feature add karna ya existing bug fix karna easy hona chahiye.
+
+Good maintainability ke liye:
+- Clean code
+- Modular architecture
+- Proper documentation
+- Automated testing
+
+
+5. System Design mein Trade-offs kyun unavoidable hain?
+   ====================================================
+
+Trade-off ka matlab hai ek quality improve karne ke liye dusri quality mein compromise karna pad sakta hai.
+
+System design mein har quality ko maximum level par achieve karna possible nahi hota, kyunki resources limited hote hain aur requirements ek dusre se conflict kar sakti hain.
+Example 1: Performance vs Cost
+Agar hum bahut saare powerful servers use karenge, toh application fast ho sakti hai.
+
+Lekin servers ka cost bhi increase hoga.
+
+Trade-off: Better performance ke liye higher cost.
+Example 2: Consistency vs Availability
+Distributed system mein network failure ke time agar system har request par latest data dene ki guarantee karta hai, toh kuch requests ko reject ya delay karna pad sakta hai.
+
+Agar system har situation mein response dena prefer karta hai, toh kuch users ko temporarily outdated data mil sakta hai.
+
+Trade-off: Strong consistency aur availability ke beech compromise.
+Example 3: Security vs Performance
+Strong encryption aur additional security checks system ko secure banate hain.
+
+Lekin ye extra processing time le sakte hain.
+
+Trade-off: Better security ke liye kuch performance overhead.
+Final Revision
+Quality	             Simple Meaning
+Scalability:	    Users badhne par system grow kar sake
+Performance:	    System fast response de
+Availability:	    System accessible rahe
+Reliability:	    System correctly kaam kare
+Consistency:	    Data correct aur updated rahe
+Durability:	        Saved data lost na ho
+Security:   	    System aur data protected rahe
+Cost:       	    System ka expense reasonable ho
+Maintainability:	System ko update aur fix karna easy ho
